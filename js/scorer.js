@@ -1,78 +1,93 @@
 // ─────────────────────────────────────────────
 //  SCORING ENGINE — 100 points total
-//  Edit thresholds here to update the model.
+//  Works with MASTER_SUBURBS schema:
+//    vac (vacancy %), yield (gross yield %),
+//    growth (annual growth %), dsr (0-100),
+//    cycle ("Early"|"Mid"|"Late")
 // ─────────────────────────────────────────────
 
-const VACANCY_RULES = [
-  { max: 1.0, pts: 15 },
-  { max: 1.5, pts: 12 },
-  { max: 2.0, pts:  9 },
-  { max: 2.5, pts:  5 },
-  { max: Infinity, pts: 0 },
-];
+// 1a. Vacancy Rate → 15 pts (lower = better)
+function scoreVacancy(vac) {
+  return vac < 1.0 ? 15 : vac < 1.5 ? 12 : vac < 2.0 ? 9 : vac < 2.5 ? 5 : 0;
+}
 
-const YIELD_RULES = [
-  { min: 6.0, pts: 10 },
-  { min: 5.5, pts:  8 },
-  { min: 5.0, pts:  6 },
-  { min: 4.5, pts:  3 },
-  { min: 0,   pts:  0 },
-];
+// 1b. DSR / Supply-Demand Ratio → 15 pts
+function scoreDSR(dsr) {
+  return dsr >= 70 ? 15 : dsr >= 63 ? 12 : dsr >= 58 ? 9 : dsr >= 55 ? 5 : dsr >= 52 ? 2 : 0;
+}
 
-const SUPPLY_PTS      = { very_limited: 15, low: 12, balanced: 8, large_release: 3, oversupply: 0 };
-const INFRA_PTS       = { major: 15, strong: 12, moderate: 8, minimal: 3, none: 0 };
-const POP_PTS         = { strong: 15, good: 12, moderate: 8, flat: 3, declining: 0 };
-const RENT_PTS        = { explosive: 10, strong: 8, moderate: 5, flat: 2, falling: 0 };
-const OWNER_OCC_PTS   = { strong: 10, good: 8, moderate: 5, mostly_investor: 2, poor: 0 };
-const ECO_DIV_PTS     = { highly_diversified: 5, moderate: 3, single: 0 };
-const NATURAL_RISK_PTS = { low: 5, moderate: 3, high: 0 };
+// 2a. Annual Capital Growth % → 15 pts
+function scoreGrowth(growth) {
+  return growth >= 25 ? 15 : growth >= 20 ? 12 : growth >= 15 ? 9 : growth >= 10 ? 6 : growth >= 7 ? 3 : 0;
+}
 
-function scoreSuburb(s) {
+// 2b. Market Cycle → 15 pts  (Early = most upside)
+function scoreCycle(cycle) {
+  return cycle === 'Early' ? 15 : cycle === 'Mid' ? 9 : 3;
+}
+
+// 3a. Gross Yield % → 10 pts
+function scoreYield(y) {
+  return y >= 6.5 ? 10 : y >= 6.0 ? 9 : y >= 5.5 ? 7 : y >= 5.0 ? 5 : y >= 4.5 ? 2 : 0;
+}
+
+// 3b. Yield Quality (sustainable cash flow) → 10 pts
+//     High yield is only sustainable if the market is also tight
+function scoreYieldQuality(y, vac) {
+  if (y >= 6.0 && vac < 1.0) return 10;
+  if (y >= 5.5 && vac < 1.5) return 8;
+  if (y >= 5.0 && vac < 2.0) return 5;
+  if (y >= 4.5)               return 3;
+  return 0;
+}
+
+// 4. Owner Occupier Proxy → 10 pts
+//    Tight vacancy + strong DSR = high owner-occ competition
+function scoreOwnerOcc(dsr, vac) {
+  if (dsr >= 65 && vac < 0.5) return 10;
+  if (dsr >= 60 && vac < 1.0) return 8;
+  if (dsr >= 55 && vac < 1.5) return 5;
+  if (dsr >= 52 && vac < 2.0) return 2;
+  return 0;
+}
+
+// 5a. Cycle Risk → 5 pts (Early cycle = lower downside risk)
+function scoreCycleRisk(cycle) {
+  return cycle === 'Early' ? 5 : cycle === 'Mid' ? 3 : 1;
+}
+
+// 5b. Market Tightness Risk → 5 pts (tight = low vacancy risk)
+function scoreVacRisk(vac) {
+  return vac < 0.5 ? 5 : vac < 1.0 ? 4 : vac < 2.0 ? 3 : vac < 3.0 ? 1 : 0;
+}
+
+// ─── MAIN SCORER ─────────────────────────────
+
+function scoreMasterSuburb(s) {
   const sc = {};
 
-  // 1a. Vacancy Rate (15 pts — lower is better)
-  for (const rule of VACANCY_RULES) {
-    if (s.vacancyRate < rule.max) { sc.vacancy = rule.pts; break; }
-  }
+  sc.vacancy     = scoreVacancy(s.vac);
+  sc.dsr         = scoreDSR(s.dsr);
+  sc.growth      = scoreGrowth(s.growth);
+  sc.cycle       = scoreCycle(s.cycle);
+  sc.yield_      = scoreYield(s.yield);
+  sc.yieldQual   = scoreYieldQuality(s.yield, s.vac);
+  sc.ownerOcc    = scoreOwnerOcc(s.dsr, s.vac);
+  sc.cycleRisk   = scoreCycleRisk(s.cycle);
+  sc.vacRisk     = scoreVacRisk(s.vac);
 
-  // 1b. Supply Risk (15 pts)
-  sc.supply = SUPPLY_PTS[s.supplyRisk] ?? 8;
-
-  // 2a. Infrastructure & Jobs (15 pts)
-  sc.infra = INFRA_PTS[s.infraJobs] ?? 8;
-
-  // 2b. Population & Migration (15 pts)
-  sc.population = POP_PTS[s.popGrowth] ?? 8;
-
-  // 3a. Gross Yield (10 pts)
-  sc.yield_ = 0;
-  for (const rule of YIELD_RULES) {
-    if (s.grossYield >= rule.min) { sc.yield_ = rule.pts; break; }
-  }
-
-  // 3b. Rent Growth Momentum (10 pts)
-  sc.rentGrowth = RENT_PTS[s.rentGrowth] ?? 5;
-
-  // 4. Owner Occupier & Desirability (10 pts)
-  sc.ownerOcc = OWNER_OCC_PTS[s.ownerOccupier] ?? 5;
-
-  // 5a. Economic Diversity (5 pts)
-  sc.ecoDiversity = ECO_DIV_PTS[s.ecoDiversity] ?? 3;
-
-  // 5b. Natural/Crime Risk (5 pts)
-  sc.naturalRisk = NATURAL_RISK_PTS[s.naturalRisk] ?? 3;
-
-  // Category subtotals (used for display and sorting)
-  sc.demandSupply  = sc.vacancy + sc.supply;
-  sc.growthDrivers = sc.infra + sc.population;
-  sc.cashFlow      = sc.yield_ + sc.rentGrowth;
-  sc.ownerOccTotal = sc.ownerOcc;
-  sc.riskControl   = sc.ecoDiversity + sc.naturalRisk;
+  // Category subtotals for display + sorting
+  sc.demandSupply  = sc.vacancy + sc.dsr;          // max 30
+  sc.growthDrivers = sc.growth  + sc.cycle;         // max 30
+  sc.cashFlow      = sc.yield_  + sc.yieldQual;    // max 20
+  sc.ownerOccTotal = sc.ownerOcc;                   // max 10
+  sc.riskControl   = sc.cycleRisk + sc.vacRisk;    // max 10
 
   sc.total = sc.demandSupply + sc.growthDrivers + sc.cashFlow + sc.ownerOccTotal + sc.riskControl;
-
   return sc;
 }
+
+// ─── GRADE + COLOUR HELPERS ──────────────────
 
 function getGrade(total) {
   if (total >= 90) return { grade: 'A+', label: 'Elite Buy',        cls: 'g-aplus', chipSuffix: 'aplus' };
@@ -82,12 +97,11 @@ function getGrade(total) {
   return                   { grade: 'D',  label: 'Reject',           cls: 'g-d',     chipSuffix: 'd'     };
 }
 
-// Returns a CSS colour based on score as a fraction of max
 function scoreColor(pts, max) {
   const pct = pts / max;
-  if (pct >= 0.8)  return '#27b389';
-  if (pct >= 0.6)  return '#3d8ef0';
-  if (pct >= 0.4)  return '#e08c2a';
+  if (pct >= 0.8) return '#27b389';
+  if (pct >= 0.6) return '#3d8ef0';
+  if (pct >= 0.4) return '#e08c2a';
   return '#e04a4a';
 }
 

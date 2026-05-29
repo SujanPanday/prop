@@ -1,17 +1,65 @@
 // ─────────────────────────────────────────────
-//  APP — rendering, filtering, sorting
+//  APP — Score Cards page
+//  Uses MASTER_SUBURBS (250 suburbs) from data/master-data.js
+//  Scores via scoreMasterSuburb() in js/scorer.js
 // ─────────────────────────────────────────────
 
+// Category config — label, max, and what actual data to display
 const CATEGORIES = [
-  { key: 'demandSupply',  label: 'Demand / Supply', max: 30 },
-  { key: 'growthDrivers', label: 'Growth Drivers',  max: 30 },
-  { key: 'cashFlow',      label: 'Cash Flow',        max: 20 },
-  { key: 'ownerOccTotal', label: 'Owner Occupier',   max: 10 },
-  { key: 'riskControl',   label: 'Risk Control',     max: 10 },
+  {
+    key: 'demandSupply',
+    label: 'Demand / Supply',
+    max: 30,
+    vals: s => `Vacancy: ${s.vac}%  ·  DSR: ${s.dsr}`,
+    breakdown: s => {
+      const sc = s.scores;
+      return `Vac ${s.vac}% → ${sc.vacancy}/15 pts &nbsp;|&nbsp; DSR ${s.dsr} → ${sc.dsr}/15 pts`;
+    },
+  },
+  {
+    key: 'growthDrivers',
+    label: 'Growth Drivers',
+    max: 30,
+    vals: s => `Growth: ${s.growth}%  ·  Cycle: ${s.cycle}`,
+    breakdown: s => {
+      const sc = s.scores;
+      return `Growth ${s.growth}% → ${sc.growth}/15 pts &nbsp;|&nbsp; ${s.cycle} cycle → ${sc.cycle}/15 pts`;
+    },
+  },
+  {
+    key: 'cashFlow',
+    label: 'Cash Flow',
+    max: 20,
+    vals: s => `Gross Yield: ${s.yield.toFixed(1)}%`,
+    breakdown: s => {
+      const sc = s.scores;
+      return `Yield ${s.yield.toFixed(1)}% → ${sc.yield_}/10 pts &nbsp;|&nbsp; Yield quality → ${sc.yieldQual}/10 pts`;
+    },
+  },
+  {
+    key: 'ownerOccTotal',
+    label: 'Owner Occupier',
+    max: 10,
+    vals: s => `DSR: ${s.dsr}  ·  Vacancy: ${s.vac}%`,
+    breakdown: s => {
+      const sc = s.scores;
+      return `DSR ${s.dsr} + Vac ${s.vac}% → ${sc.ownerOcc}/10 pts`;
+    },
+  },
+  {
+    key: 'riskControl',
+    label: 'Risk Control',
+    max: 10,
+    vals: s => `Cycle: ${s.cycle}  ·  Vacancy: ${s.vac}%`,
+    breakdown: s => {
+      const sc = s.scores;
+      return `Cycle risk → ${sc.cycleRisk}/5 pts &nbsp;|&nbsp; Market tightness → ${sc.vacRisk}/5 pts`;
+    },
+  },
 ];
 
-// Score all suburbs once at load
-const DATA = SUBURBS.map(s => ({ ...s, scores: scoreSuburb(s) }));
+// Score all 250 suburbs at load
+const DATA = MASTER_SUBURBS.map(s => ({ ...s, scores: scoreMasterSuburb(s) }));
 
 let sortCol    = 'total';
 let sortDir    = -1;
@@ -43,8 +91,7 @@ function setSort(col, el) {
     sortDir *= -1;
   } else {
     sortCol = col;
-    // Ascending by default for vacancy (lower = better) and name
-    sortDir = (col === 'vacancyRate' || col === 'suburb') ? 1 : -1;
+    sortDir = (col === 'vac' || col === 'suburb') ? 1 : -1;
   }
   document.querySelectorAll('.sbtn').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
@@ -79,9 +126,7 @@ function render() {
 
   data.sort((a, b) => {
     if (sortCol === 'suburb') return sortDir * a.suburb.localeCompare(b.suburb);
-    const av = getValue(a, sortCol);
-    const bv = getValue(b, sortCol);
-    return sortDir * (av - bv);
+    return sortDir * (getValue(a, sortCol) - getValue(b, sortCol));
   });
 
   updateStats();
@@ -91,11 +136,7 @@ function render() {
   const grid  = document.getElementById('grid');
   const noRes = document.getElementById('noRes');
 
-  if (!data.length) {
-    grid.innerHTML = '';
-    noRes.style.display = 'block';
-    return;
-  }
+  if (!data.length) { grid.innerHTML = ''; noRes.style.display = 'block'; return; }
   noRes.style.display = 'none';
   grid.innerHTML = data.map(buildCard).join('');
 }
@@ -105,8 +146,8 @@ function getValue(s, col) {
     case 'total':         return s.scores.total;
     case 'demandSupply':  return s.scores.demandSupply;
     case 'growthDrivers': return s.scores.growthDrivers;
-    case 'grossYield':    return s.grossYield;
-    case 'vacancyRate':   return s.vacancyRate;
+    case 'yield':         return s.yield;
+    case 'vac':           return s.vac;
     default:              return s.scores.total;
   }
 }
@@ -129,28 +170,40 @@ function updateStats() {
   document.getElementById('s-total').textContent = DATA.length;
 }
 
-function buildCard(s, i) {
-  const sc        = s.scores;
-  const g         = getGrade(sc.total);
-  const barColor  = totalScoreColor(sc.total);
+// ── CARD BUILDER ────────────────────────────
 
-  const vacCls   = s.vacancyRate < 1.0 ? 'g' : s.vacancyRate < 2.0 ? 'a' : 'r';
-  const yldCls   = s.grossYield  >= 5.5 ? 'g' : s.grossYield >= 4.5 ? 'a' : 'r';
-  const riskLabel = { low: 'Low Risk', moderate: 'Mod. Risk', high: 'High Risk' }[s.naturalRisk] || 'Mod. Risk';
-  const riskCls   = s.naturalRisk === 'low' ? 'g' : s.naturalRisk === 'moderate' ? 'a' : 'r';
+function buildCard(s, i) {
+  const sc       = s.scores;
+  const g        = getGrade(sc.total);
+  const barColor = totalScoreColor(sc.total);
+
+  const vacCls  = s.vac    < 1.0 ? 'g' : s.vac    < 2.0 ? 'a' : 'r';
+  const yldCls  = s.yield >= 5.5 ? 'g' : s.yield >= 4.5 ? 'a' : 'r';
+  const gthCls  = s.growth >= 15 ? 'g' : s.growth >= 7  ? 'a' : 'r';
 
   const catBars = CATEGORIES.map(c => {
-    const pts = sc[c.key] || 0;
-    const w   = (pts / c.max) * 100;
-    const col = scoreColor(pts, c.max);
+    const pts   = sc[c.key] || 0;
+    const w     = (pts / c.max) * 100;
+    const col   = scoreColor(pts, c.max);
+    const vals  = c.vals(s);
+    const brkdn = c.breakdown(s);
     return `<div class="cat-row">
-      <div class="cat-name">${c.label}</div>
-      <div class="cat-bar-wrap"><div class="cat-bar" style="width:${w}%;background:${col}"></div></div>
+      <div class="cat-info">
+        <div class="cat-name">${c.label}</div>
+        <div class="cat-vals">${vals}</div>
+      </div>
+      <div class="cat-bar-wrap" title="${brkdn}">
+        <div class="cat-bar" style="width:${w}%;background:${col}"></div>
+      </div>
       <div class="cat-pts" style="color:${col}">${pts}/${c.max}</div>
     </div>`;
   }).join('');
 
-  const delay = Math.min(i * 0.03, 0.45);
+  const priceFmt = s.price >= 1000000
+    ? '$' + (s.price / 1000000).toFixed(2) + 'M'
+    : '$' + (s.price / 1000).toFixed(0) + 'k';
+
+  const delay = Math.min(i * 0.02, 0.6);
 
   return `<div class="card ${g.cls}" style="animation-delay:${delay}s" onclick="this.classList.toggle('open')">
     <div class="ch">
@@ -161,22 +214,22 @@ function buildCard(s, i) {
       <div class="ch-right">
         <span class="grade-badge">${g.grade}</span>
         <span class="st-badge st-${s.state}">${s.state}</span>
-        <span class="price-tag">~$${(s.price / 1000).toFixed(0)}k</span>
+        <span class="price-tag">~${priceFmt}</span>
       </div>
     </div>
 
     <div class="mrow">
       <div class="metric">
-        <div class="mv ${vacCls}">${s.vacancyRate}%</div>
+        <div class="mv ${vacCls}">${s.vac}%</div>
         <div class="ml">Vacancy</div>
       </div>
       <div class="metric">
-        <div class="mv ${yldCls}">${s.grossYield.toFixed(1)}%</div>
+        <div class="mv ${yldCls}">${s.yield.toFixed(1)}%</div>
         <div class="ml">Yield</div>
       </div>
       <div class="metric">
-        <div class="mv ${riskCls}">${riskLabel}</div>
-        <div class="ml">Risk</div>
+        <div class="mv ${gthCls}">${s.growth}%</div>
+        <div class="ml">Growth</div>
       </div>
     </div>
 

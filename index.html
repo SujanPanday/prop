@@ -25,7 +25,7 @@
   <div class="hero">
     <div class="hero-tag">🇦🇺 Australian Property Intelligence 2026</div>
     <h1>Find Your<br><em>Best Investment</em></h1>
-    <p class="hero-sub">28 suburbs ranked on a 100-point system across 5 fundamentals — demand, growth, cash flow, desirability, and risk.</p>
+    <p class="hero-sub">250 suburbs scored on a 100-point system — 5 categories, real 2026 market data. Hover score bars for the point breakdown.</p>
 
     <div class="grade-pills">
       <div class="grade-pill"><span class="gp-badge" style="color:var(--grade-aplus)">A+</span>90–100 · Elite Buy</div>
@@ -46,6 +46,94 @@
   </div>
 
   <main>
+
+    <!-- SCORING LEGEND -->
+    <details class="legend-box">
+      <summary class="legend-summary">How scoring works — 100 points across 5 categories</summary>
+      <div class="legend-body">
+        <div class="legend-cols">
+
+          <div class="legend-cat">
+            <div class="legend-cat-title" style="color:var(--grade-b)">① Demand vs Supply — 30 pts</div>
+            <div class="legend-row">
+              <div class="legend-item-name">Vacancy Rate (15 pts)</div>
+              <div class="legend-thresholds">
+                <span>&lt;1% = 15</span><span>1–1.5% = 12</span><span>1.5–2% = 9</span><span>2–2.5% = 5</span><span>&gt;2.5% = 0</span>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-item-name">DSR Score (15 pts)</div>
+              <div class="legend-thresholds">
+                <span>≥70 = 15</span><span>≥63 = 12</span><span>≥58 = 9</span><span>≥55 = 5</span><span>≥52 = 2</span><span>&lt;52 = 0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend-cat">
+            <div class="legend-cat-title" style="color:var(--grade-a)">② Growth Drivers — 30 pts</div>
+            <div class="legend-row">
+              <div class="legend-item-name">Annual Growth (15 pts)</div>
+              <div class="legend-thresholds">
+                <span>≥25% = 15</span><span>≥20% = 12</span><span>≥15% = 9</span><span>≥10% = 6</span><span>≥7% = 3</span><span>&lt;7% = 0</span>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-item-name">Market Cycle (15 pts)</div>
+              <div class="legend-thresholds">
+                <span>Early = 15</span><span>Mid = 9</span><span>Late = 3</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend-cat">
+            <div class="legend-cat-title" style="color:var(--grade-aplus)">③ Cash Flow — 20 pts</div>
+            <div class="legend-row">
+              <div class="legend-item-name">Gross Yield (10 pts)</div>
+              <div class="legend-thresholds">
+                <span>≥6.5% = 10</span><span>≥6% = 9</span><span>≥5.5% = 7</span><span>≥5% = 5</span><span>≥4.5% = 2</span><span>&lt;4.5% = 0</span>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-item-name">Yield Quality (10 pts)</div>
+              <div class="legend-thresholds">
+                <span>≥6% + vac&lt;1% = 10</span><span>≥5.5% + vac&lt;1.5% = 8</span><span>≥5% + vac&lt;2% = 5</span><span>≥4.5% = 3</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend-cat">
+            <div class="legend-cat-title" style="color:var(--grade-c)">④ Owner Occupier — 10 pts</div>
+            <div class="legend-row">
+              <div class="legend-item-name">DSR + Vacancy proxy (10 pts)</div>
+              <div class="legend-thresholds">
+                <span>DSR≥65 + vac&lt;0.5% = 10</span><span>DSR≥60 + vac&lt;1% = 8</span>
+                <span>DSR≥55 + vac&lt;1.5% = 5</span><span>DSR≥52 + vac&lt;2% = 2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend-cat">
+            <div class="legend-cat-title" style="color:var(--muted2)">⑤ Risk Control — 10 pts</div>
+            <div class="legend-row">
+              <div class="legend-item-name">Cycle Risk (5 pts)</div>
+              <div class="legend-thresholds">
+                <span>Early = 5</span><span>Mid = 3</span><span>Late = 1</span>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-item-name">Market Tightness (5 pts)</div>
+              <div class="legend-thresholds">
+                <span>vac&lt;0.5% = 5</span><span>&lt;1% = 4</span><span>&lt;2% = 3</span><span>&lt;3% = 1</span><span>else = 0</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="legend-note">Hover any score bar on a card to see the exact point breakdown for that suburb. DSR = Demand-to-Supply Ratio (source: HtAG / Picki, 0–100 scale). Scoring uses 2026 market data only.</div>
+      </div>
+    </details>
+
+    <!-- CONTROLS -->
     <div class="controls">
       <div class="ctrl-group">
         <div class="ctrl-label">Search</div>
@@ -56,7 +144,7 @@
         <select id="stateFilter">
           <option value="">All states</option>
           <option>NSW</option><option>QLD</option><option>VIC</option>
-          <option>WA</option><option>SA</option><option>TAS</option>
+          <option>WA</option><option>SA</option><option>TAS</option><option>NT</option>
         </select>
       </div>
       <div class="ctrl-group">
@@ -74,13 +162,14 @@
       <div class="res-count" id="resCount"></div>
     </div>
 
+    <!-- SORT BAR -->
     <div class="sort-bar">
       <span class="sort-lbl">Sort by</span>
       <button class="sbtn on" onclick="setSort('total',this)">Total Score</button>
       <button class="sbtn"    onclick="setSort('demandSupply',this)">Demand/Supply</button>
       <button class="sbtn"    onclick="setSort('growthDrivers',this)">Growth</button>
-      <button class="sbtn"    onclick="setSort('grossYield',this)">Yield</button>
-      <button class="sbtn"    onclick="setSort('vacancyRate',this)">Vacancy</button>
+      <button class="sbtn"    onclick="setSort('yield',this)">Yield</button>
+      <button class="sbtn"    onclick="setSort('vac',this)">Vacancy</button>
       <button class="sbtn"    onclick="setSort('suburb',this)">Name A–Z</button>
     </div>
 
@@ -97,7 +186,7 @@
 
   <div class="mt-header">
     <div class="mt-title">Master Suburb Table</div>
-    <div class="mt-sub">250 suburbs · 2026 data (CoreLogic, PropTrack, YIP, REIQ, REIWA, Cotality) · Click column headers to sort</div>
+    <div class="mt-sub">250 suburbs · 2026 data (CoreLogic, PropTrack, YIP, REIQ, REIWA, Cotality, HtAG, Picki) · Click column headers to sort</div>
   </div>
 
   <div class="mt-sum-bar" id="mt-sum"></div>
@@ -126,7 +215,7 @@
     <table class="mt-table">
       <thead>
         <tr>
-          <th onclick="mtSort('rank')"   >#<span id="mta-rank" class="mt-th"></span></th>
+          <th onclick="mtSort('rank')"   >#<span id="mta-rank" class="mt-th"> ↑</span></th>
           <th onclick="mtSort('suburb')" >Suburb<span id="mta-suburb" class="mt-th"></span></th>
           <th onclick="mtSort('city')"   >City / Region<span id="mta-city" class="mt-th"></span></th>
           <th onclick="mtSort('state')"  >St<span id="mta-state" class="mt-th"></span></th>
@@ -166,7 +255,6 @@
   <a href="#">AusPropertyIQ</a> · For research purposes only — not financial advice · Always seek independent professional advice before investing
 </footer>
 
-<script src="data/suburbs-data.js"></script>
 <script src="data/master-data.js"></script>
 <script src="js/scorer.js"></script>
 <script src="js/app.js"></script>
