@@ -74,7 +74,7 @@ body::before {
   letter-spacing: -0.02em;
 }
 
-.nav-tabs { display: flex; gap: 4px; }
+.nav-tabs { display: flex; gap: 4px; margin-left: auto; }
 
 .nav-tab {
   background: transparent;
