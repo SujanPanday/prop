@@ -13,12 +13,13 @@
 <nav class="top-nav">
   <div class="nav-brand">AusPropertyIQ</div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('suburbs', this)">Suburb Table</button>
-    <button class="nav-tab" onclick="showPage('scout', this)">Property Scout</button>
+    <button class="nav-tab active" onclick="showPage('suburbs', this)">Score Cards</button>
+    <button class="nav-tab"        onclick="showPage('table', this)">Suburb Table</button>
+    <button class="nav-tab"        onclick="showPage('scout', this)">Property Scout</button>
   </div>
 </nav>
 
-<!-- ── SUBURB TABLE PAGE ── -->
+<!-- ── SCORE CARDS PAGE ── -->
 <div id="page-suburbs">
 
   <div class="hero">
@@ -61,12 +62,12 @@
       <div class="ctrl-group">
         <div class="ctrl-label">Grade</div>
         <div class="vchips">
-          <button class="vchip on-all" data-g="all"     onclick="setGrade('all',this)">All</button>
-          <button class="vchip"        data-g="g-aplus"  onclick="setGrade('g-aplus',this)">A+</button>
-          <button class="vchip"        data-g="g-a"      onclick="setGrade('g-a',this)">A</button>
-          <button class="vchip"        data-g="g-b"      onclick="setGrade('g-b',this)">B</button>
-          <button class="vchip"        data-g="g-c"      onclick="setGrade('g-c',this)">C</button>
-          <button class="vchip"        data-g="g-d"      onclick="setGrade('g-d',this)">D</button>
+          <button class="vchip on-all" data-g="all"    onclick="setGrade('all',this)">All</button>
+          <button class="vchip"        data-g="g-aplus" onclick="setGrade('g-aplus',this)">A+</button>
+          <button class="vchip"        data-g="g-a"     onclick="setGrade('g-a',this)">A</button>
+          <button class="vchip"        data-g="g-b"     onclick="setGrade('g-b',this)">B</button>
+          <button class="vchip"        data-g="g-c"     onclick="setGrade('g-c',this)">C</button>
+          <button class="vchip"        data-g="g-d"     onclick="setGrade('g-d',this)">D</button>
         </div>
       </div>
       <button class="reset-btn" onclick="resetAll()">&#8635; Reset</button>
@@ -75,12 +76,12 @@
 
     <div class="sort-bar">
       <span class="sort-lbl">Sort by</span>
-      <button class="sbtn on"  onclick="setSort('total',this)">Total Score</button>
-      <button class="sbtn"     onclick="setSort('demandSupply',this)">Demand/Supply</button>
-      <button class="sbtn"     onclick="setSort('growthDrivers',this)">Growth</button>
-      <button class="sbtn"     onclick="setSort('grossYield',this)">Yield</button>
-      <button class="sbtn"     onclick="setSort('vacancyRate',this)">Vacancy</button>
-      <button class="sbtn"     onclick="setSort('suburb',this)">Name A–Z</button>
+      <button class="sbtn on" onclick="setSort('total',this)">Total Score</button>
+      <button class="sbtn"    onclick="setSort('demandSupply',this)">Demand/Supply</button>
+      <button class="sbtn"    onclick="setSort('growthDrivers',this)">Growth</button>
+      <button class="sbtn"    onclick="setSort('grossYield',this)">Yield</button>
+      <button class="sbtn"    onclick="setSort('vacancyRate',this)">Vacancy</button>
+      <button class="sbtn"    onclick="setSort('suburb',this)">Name A–Z</button>
     </div>
 
     <div class="grid" id="grid"></div>
@@ -88,6 +89,65 @@
       <span>🔍</span>No suburbs match — try broadening your filters.
     </div>
   </main>
+
+</div>
+
+<!-- ── SUBURB TABLE PAGE ── -->
+<div id="page-table" style="display:none">
+
+  <div class="mt-header">
+    <div class="mt-title">Master Suburb Table</div>
+    <div class="mt-sub">250 suburbs · 2026 data (CoreLogic, PropTrack, YIP, REIQ, REIWA, Cotality) · Click column headers to sort</div>
+  </div>
+
+  <div class="mt-sum-bar" id="mt-sum"></div>
+
+  <div class="mt-controls">
+    <input  type="text" id="mt-search"  placeholder="Search suburb or city…" oninput="mtRender()">
+    <select id="mt-state"   onchange="mtRender()">
+      <option value="">All states</option>
+      <option>NSW</option><option>QLD</option><option>VIC</option>
+      <option>WA</option><option>SA</option><option>TAS</option><option>NT</option>
+    </select>
+    <select id="mt-verdict" onchange="mtRender()">
+      <option value="">All verdicts</option>
+      <option>Strong Buy</option><option>Conditional</option>
+      <option>Watch</option><option>Avoid</option>
+    </select>
+    <select id="mt-cycle"   onchange="mtRender()">
+      <option value="">All cycles</option>
+      <option>Early</option><option>Mid</option><option>Late</option>
+    </select>
+    <button class="reset-btn" onclick="mtReset()">&#8635; Reset</button>
+    <span class="mt-count-lbl" id="mt-count"></span>
+  </div>
+
+  <div class="mt-wrap">
+    <table class="mt-table">
+      <thead>
+        <tr>
+          <th onclick="mtSort('rank')"   >#<span id="mta-rank" class="mt-th"></span></th>
+          <th onclick="mtSort('suburb')" >Suburb<span id="mta-suburb" class="mt-th"></span></th>
+          <th onclick="mtSort('city')"   >City / Region<span id="mta-city" class="mt-th"></span></th>
+          <th onclick="mtSort('state')"  >St<span id="mta-state" class="mt-th"></span></th>
+          <th onclick="mtSort('price')"  >Median $<span id="mta-price" class="mt-th"></span></th>
+          <th onclick="mtSort('yield')"  >Yield%<span id="mta-yield" class="mt-th"></span></th>
+          <th onclick="mtSort('growth')" >Growth%<span id="mta-growth" class="mt-th"></span></th>
+          <th onclick="mtSort('vac')"    >Vac%<span id="mta-vac" class="mt-th"></span></th>
+          <th onclick="mtSort('dsr')"    >DSR<span id="mta-dsr" class="mt-th"></span></th>
+          <th onclick="mtSort('cycle')"  >Cycle<span id="mta-cycle" class="mt-th"></span></th>
+          <th onclick="mtSort('verdict')">Verdict<span id="mta-verdict" class="mt-th"></span></th>
+          <th>2026 Data Note</th>
+        </tr>
+      </thead>
+      <tbody id="mt-tbody"></tbody>
+    </table>
+    <div id="mt-nores" style="display:none;text-align:center;padding:3rem;color:var(--muted)">No results.</div>
+  </div>
+
+  <div class="mt-src">
+    Sources: CoreLogic/Cotality (Jan–May 2026) · YIP Apr 2026 · PropTrack May 2026 · REIWA Feb 2026 · Picki May 2026 · HtAG May 2026 · REIQ Q1 2026 · Not financial advice.
+  </div>
 
 </div>
 
@@ -107,7 +167,9 @@
 </footer>
 
 <script src="data/suburbs-data.js"></script>
+<script src="data/master-data.js"></script>
 <script src="js/scorer.js"></script>
 <script src="js/app.js"></script>
+<script src="js/master-table.js"></script>
 </body>
 </html>

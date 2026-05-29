@@ -669,6 +669,138 @@ footer a { color: var(--accent); text-decoration: none; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── MASTER TABLE PAGE ── */
+
+.mt-header {
+  padding: 1.1rem 1.5rem 0.7rem;
+  border-bottom: 1px solid var(--border2);
+}
+
+.mt-title {
+  font-family: var(--font-h);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.mt-sub { font-size: 11px; color: var(--muted); }
+
+.mt-sum-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border2);
+}
+
+.mt-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0.7rem 1.5rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border2);
+  position: sticky;
+  top: 56px;
+  z-index: 20;
+  align-items: center;
+}
+
+.mt-controls input,
+.mt-controls select {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--font-b);
+  font-size: 12px;
+  padding: 6px 9px;
+  border-radius: var(--r);
+  outline: none;
+  min-width: 0;
+}
+
+.mt-controls input { width: 180px; }
+.mt-controls input:focus,
+.mt-controls select:focus { border-color: var(--accent); }
+
+.mt-count-lbl { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+.mt-wrap {
+  overflow-x: auto;
+  padding: 0 1.5rem 3rem;
+}
+
+.mt-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.mt-table thead th {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: left;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--border2);
+  background: var(--bg);
+  cursor: pointer;
+  white-space: nowrap;
+  position: sticky;
+  top: 105px;
+  z-index: 10;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.mt-table thead th:hover { color: var(--muted2); }
+
+.mt-table tbody tr { border-bottom: 1px solid var(--border); }
+.mt-table tbody tr:hover { background: var(--surface2); }
+
+.mt-table td {
+  padding: 6px 9px;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.mt-rank  { color: var(--muted); font-size: 11px; }
+.mt-suburb { font-weight: 600; color: var(--text); }
+.mt-city   { font-size: 11px; color: var(--muted); }
+.mt-note   { white-space: normal; max-width: 260px; font-size: 11px; color: var(--muted2); line-height: 1.4; }
+.mt-th     { font-size: 9px; margin-left: 2px; opacity: 0.6; }
+
+/* Cell colour helpers for table */
+.mtg { color: var(--grade-a);  font-weight: 500; }
+.mta { color: var(--grade-c);  font-weight: 500; }
+.mtr { color: var(--grade-d);  font-weight: 500; }
+
+/* Verdict badges */
+.vdt {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+.vdt-sb { background: var(--grade-a-bg);     color: var(--grade-a);     border: 1px solid rgba(39,179,137,0.3); }
+.vdt-co { background: var(--grade-b-bg);     color: var(--grade-b);     border: 1px solid rgba(61,142,240,0.3); }
+.vdt-wa { background: var(--grade-c-bg);     color: var(--grade-c);     border: 1px solid rgba(224,140,42,0.3); }
+.vdt-av { background: var(--grade-d-bg);     color: var(--grade-d);     border: 1px solid rgba(224,74,74,0.3); }
+
+.mt-src {
+  font-size: 10px;
+  color: var(--muted);
+  padding: 0.5rem 1.5rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
   .grid { grid-template-columns: 1fr; }
