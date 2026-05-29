@@ -851,7 +851,7 @@ footer a { color: var(--accent); text-decoration: none; }
   cursor: pointer;
   white-space: nowrap;
   position: sticky;
-  top: 103px;
+  top: 110px;
   z-index: 10;
   text-transform: uppercase;
   letter-spacing: 0.05em;

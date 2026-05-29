@@ -73,6 +73,7 @@ function showPage(page, el) {
   document.getElementById('page-scout').style.display   = page === 'scout'   ? 'block' : 'none';
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  window.scrollTo(0, 0);
   if (page === 'table') mtRender();
 }
 
