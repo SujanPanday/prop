@@ -828,8 +828,9 @@ footer a { color: var(--accent); text-decoration: none; }
 .mt-count-lbl { font-size: 11px; color: #64748b; margin-left: auto; }
 
 .mt-wrap {
-  overflow-x: auto;
-  padding: 0 1.5rem 3rem;
+  overflow: auto;
+  height: calc(100vh - 115px);
+  padding: 0 1.5rem;
 }
 
 .mt-table {
@@ -851,7 +852,7 @@ footer a { color: var(--accent); text-decoration: none; }
   cursor: pointer;
   white-space: nowrap;
   position: sticky;
-  top: 103px;
+  top: 0;
   z-index: 10;
   text-transform: uppercase;
   letter-spacing: 0.05em;
