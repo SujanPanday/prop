@@ -296,14 +296,43 @@ const IJ_CLS   = { major: 'mtg', strong: 'mtg', moderate: 'mta', weak: 'mtr', no
 const CY_CLS   = { 'Early': 'mtg', 'Early-Mid': 'mtg', 'Mid': 'mta', 'Late': 'mtr', 'Peak': 'mtr' };
 
 function mtRender() {
-  const search = document.getElementById('mt-search').value.toLowerCase();
-  const state  = document.getElementById('mt-state').value;
-  const ij     = document.getElementById('mt-ij').value;
-  const cycle  = document.getElementById('mt-cycle').value;
+  const search  = document.getElementById('mt-search').value.toLowerCase();
+  const state   = document.getElementById('mt-state').value;
+  const yf      = document.getElementById('mt-yield').value;
+  const gf      = document.getElementById('mt-growth').value;
+  const vf      = document.getElementById('mt-vacancy').value;
+  const pf      = document.getElementById('mt-price').value;
+  const ij      = document.getElementById('mt-ij').value;
+  const cycle   = document.getElementById('mt-cycle').value;
 
   let data = MASTER_SUBURBS.filter(r => {
     if (search && !r.suburb.toLowerCase().includes(search) && !r.city.toLowerCase().includes(search)) return false;
-    if (state && r.state     !== state) return false;
+    if (state && r.state !== state) return false;
+
+    // Yield filter
+    if (yf === '6+'     && r.yield < 6)                          return false;
+    if (yf === '5to6'   && (r.yield < 5   || r.yield >= 6))      return false;
+    if (yf === '4.5to5' && (r.yield < 4.5 || r.yield >= 5))      return false;
+    if (yf === 'sub4.5' && r.yield >= 4.5)                       return false;
+
+    // Growth filter
+    if (gf === '20+'    && r.growth < 20)                         return false;
+    if (gf === '15to20' && (r.growth < 15  || r.growth >= 20))    return false;
+    if (gf === '10to15' && (r.growth < 10  || r.growth >= 15))    return false;
+    if (gf === 'sub10'  && r.growth >= 10)                        return false;
+
+    // Vacancy filter
+    if (vf === 'sub1'   && r.vac >= 1)                            return false;
+    if (vf === '1to1.5' && (r.vac < 1   || r.vac >= 1.5))        return false;
+    if (vf === '1.5to2' && (r.vac < 1.5 || r.vac >= 2))          return false;
+    if (vf === '2plus'  && r.vac < 2)                             return false;
+
+    // Price filter
+    if (pf === 'sub500'   && r.price >= 500000)                   return false;
+    if (pf === '500to600' && (r.price < 500000 || r.price >= 600000)) return false;
+    if (pf === '600to650' && (r.price < 600000 || r.price >= 650000)) return false;
+    if (pf === '650plus'  && r.price < 650000)                    return false;
+
     if (ij    && r.infraJobs !== ij)    return false;
     if (cycle && r.cycle     !== cycle) return false;
     return true;
@@ -373,10 +402,14 @@ function mtSort(col) {
 }
 
 function mtReset() {
-  document.getElementById('mt-search').value = '';
-  document.getElementById('mt-state').value  = '';
-  document.getElementById('mt-ij').value     = '';
-  document.getElementById('mt-cycle').value  = '';
+  document.getElementById('mt-search').value  = '';
+  document.getElementById('mt-state').value   = '';
+  document.getElementById('mt-yield').value   = '';
+  document.getElementById('mt-growth').value  = '';
+  document.getElementById('mt-vacancy').value = '';
+  document.getElementById('mt-price').value   = '';
+  document.getElementById('mt-ij').value      = '';
+  document.getElementById('mt-cycle').value   = '';
   mtRender();
 }
 
