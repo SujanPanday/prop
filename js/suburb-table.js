@@ -320,25 +320,6 @@ function mtRender() {
   const arr = document.getElementById('mta-' + mtSortCol);
   if (arr) arr.textContent = mtSortDir === 1 ? ' ↑' : ' ↓';
 
-  // Summary counts by infra/jobs level
-  const counts = { major: 0, strong: 0, moderate: 0, weak: 0 };
-  data.forEach(r => {
-    if      (r.infraJobs === 'major')    counts.major++;
-    else if (r.infraJobs === 'strong')   counts.strong++;
-    else if (r.infraJobs === 'moderate') counts.moderate++;
-    else                                 counts.weak++;
-  });
-
-  const sumEl = document.getElementById('mt-sum');
-  if (sumEl) {
-    sumEl.innerHTML =
-      '<div class="sm"><div class="sm-n" style="color:#4ade80">' + counts.major    + '</div><div class="sm-l">Major Infra</div></div>' +
-      '<div class="sm"><div class="sm-n" style="color:#38bdf8">' + counts.strong   + '</div><div class="sm-l">Strong Growth</div></div>' +
-      '<div class="sm"><div class="sm-n" style="color:#fbbf24">' + counts.moderate + '</div><div class="sm-l">Moderate</div></div>' +
-      '<div class="sm"><div class="sm-n" style="color:#f87171">' + counts.weak     + '</div><div class="sm-l">Weak / None</div></div>' +
-      '<div class="sm"><div class="sm-n" style="color:#94a3b8">' + data.length     + '</div><div class="sm-l">Shown</div></div>';
-  }
-
   const cntEl = document.getElementById('mt-count');
   if (cntEl) cntEl.textContent = data.length + ' / ' + MASTER_SUBURBS.length;
 
