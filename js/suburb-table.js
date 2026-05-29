@@ -1,9 +1,20 @@
 // ─────────────────────────────────────────────
-//  AusPropertyIQ — Master Suburb Data (2026)
-//  250 suburbs. Raw market data — not 100-pt scored.
-//  Fields: rank, suburb, city, state, price,
-//          yield, growth, vac, dsr, infraJobs, cycle, note
+//  suburb-table.js
+//  Part 1: Raw 2026 suburb data (250 suburbs)
+//  Part 2: Suburb Table page — render/filter/sort
+//
+//  Fields in each suburb record:
+//    suburb, city, state    — identifiers
+//    price                  — median $ (display only)
+//    yield                  — gross yield % → Cash Flow scoring
+//    growth                 — annual growth % (context)
+//    vac                    — vacancy %      → Demand/Supply, Yield Quality, Owner Occ, Risk
+//    dsr                    — demand-supply  → Demand/Supply, Owner Occ
+//    infraJobs              — categorical    → Growth Drivers (Infra/Jobs)
+//    cycle                  — market stage   → Growth Drivers (Cycle), Risk Control
+//    note                   — 2026 data note
 // ─────────────────────────────────────────────
+
 const MASTER_SUBURBS=[
 // ── WA PERTH SE CORRIDOR ──────────────────────────────────────────────
 {rank:1,suburb:"Armadale",city:"Perth SE",state:"WA",price:600000,yield:5.2,growth:13,vac:1.5,dsr:82,infraJobs:"strong",cycle:"Mid",note:"CoreLogic Feb '26: $600k median, 13.21% growth, 11 days on mkt. 6.1% yield per PropTrack investor ranking. #1 national house score Apr '26. Low SEIFA — tenant risk noted."},
@@ -271,3 +282,122 @@ const MASTER_SUBURBS=[
 {rank:249,suburb:"Gray",city:"Darwin",state:"NT",price:460000,yield:5.80,growth:8,vac:1.00,dsr:56,infraJobs:"strong",cycle:"Early",note:"Palmerston suburb. $460k. 5.8% yield. NT broad resurgence confirmed MPA Dec '25. Under $500k."},
 {rank:250,suburb:"Katherine",city:"Katherine",state:"NT",price:280000,yield:8.50,growth:10,vac:1.50,dsr:52,infraJobs:"strong",cycle:"Early",note:"Very affordable. 8.5% yield. RAAF Base Tindal employment anchor. Remote 300km from Darwin. Small pop — limited liquidity. DSR 52 borderline. Early cycle NT."},
 ];
+
+
+// ─────────────────────────────────────────────
+//  TABLE RENDERING
+// ─────────────────────────────────────────────
+
+let mtSortCol = 'rank';
+let mtSortDir = 1;
+
+const IJ_LABEL = { major: 'Major', strong: 'Strong', moderate: 'Moderate', weak: 'Weak', none: 'None' };
+const IJ_CLS   = { major: 'mtg', strong: 'mtg', moderate: 'mta', weak: 'mtr', none: 'mtr' };
+const CY_CLS   = { 'Early': 'mtg', 'Early-Mid': 'mtg', 'Mid': 'mta', 'Late': 'mtr', 'Peak': 'mtr' };
+
+function mtRender() {
+  const search = document.getElementById('mt-search').value.toLowerCase();
+  const state  = document.getElementById('mt-state').value;
+  const ij     = document.getElementById('mt-ij').value;
+  const cycle  = document.getElementById('mt-cycle').value;
+
+  let data = MASTER_SUBURBS.filter(r => {
+    if (search && !r.suburb.toLowerCase().includes(search) && !r.city.toLowerCase().includes(search)) return false;
+    if (state && r.state     !== state) return false;
+    if (ij    && r.infraJobs !== ij)    return false;
+    if (cycle && r.cycle     !== cycle) return false;
+    return true;
+  });
+
+  data.sort((a, b) => {
+    const av = a[mtSortCol], bv = b[mtSortCol];
+    if (typeof av === 'string') return mtSortDir * av.localeCompare(bv);
+    return mtSortDir * (av - bv);
+  });
+
+  // Update sort arrows
+  document.querySelectorAll('.mt-th').forEach(e => { e.textContent = ''; });
+  const arr = document.getElementById('mta-' + mtSortCol);
+  if (arr) arr.textContent = mtSortDir === 1 ? ' ↑' : ' ↓';
+
+  // Summary counts by infra/jobs level
+  const counts = { major: 0, strong: 0, moderate: 0, weak: 0 };
+  data.forEach(r => {
+    if      (r.infraJobs === 'major')    counts.major++;
+    else if (r.infraJobs === 'strong')   counts.strong++;
+    else if (r.infraJobs === 'moderate') counts.moderate++;
+    else                                 counts.weak++;
+  });
+
+  const sumEl = document.getElementById('mt-sum');
+  if (sumEl) {
+    sumEl.innerHTML =
+      '<div class="sm"><div class="sm-n" style="color:#4ade80">' + counts.major    + '</div><div class="sm-l">Major Infra</div></div>' +
+      '<div class="sm"><div class="sm-n" style="color:#38bdf8">' + counts.strong   + '</div><div class="sm-l">Strong Growth</div></div>' +
+      '<div class="sm"><div class="sm-n" style="color:#fbbf24">' + counts.moderate + '</div><div class="sm-l">Moderate</div></div>' +
+      '<div class="sm"><div class="sm-n" style="color:#f87171">' + counts.weak     + '</div><div class="sm-l">Weak / None</div></div>' +
+      '<div class="sm"><div class="sm-n" style="color:#94a3b8">' + data.length     + '</div><div class="sm-l">Shown</div></div>';
+  }
+
+  const cntEl = document.getElementById('mt-count');
+  if (cntEl) cntEl.textContent = data.length + ' / ' + MASTER_SUBURBS.length;
+
+  const tbody = document.getElementById('mt-tbody');
+  const noRes = document.getElementById('mt-nores');
+  if (!tbody) return;
+
+  if (!data.length) {
+    tbody.innerHTML = '';
+    if (noRes) noRes.style.display = 'block';
+    return;
+  }
+  if (noRes) noRes.style.display = 'none';
+
+  tbody.innerHTML = data.map(function(r) {
+    var yc  = r.yield  >= 5.5 ? 'mtg' : r.yield  >= 4.5 ? 'mta' : 'mtr';
+    var gc  = r.growth >= 15  ? 'mtg' : r.growth >= 7   ? 'mta' : 'mtr';
+    var vc  = r.vac    <  1.0 ? 'mtg' : r.vac    <  2.0 ? 'mta' : 'mtr';
+    var dc  = r.dsr    >= 58  ? 'mtg' : r.dsr    >= 55  ? 'mta' : 'mtr';
+    var ijc = IJ_CLS[r.infraJobs] || 'mta';
+    var cc  = CY_CLS[r.cycle]    || 'mta';
+    var pc  = r.price <= 650000  ? 'mtg' : 'mtr';
+    var pf  = r.price >= 1000000
+      ? '$' + (r.price / 1000000).toFixed(2) + 'M'
+      : '$' + (r.price / 1000).toFixed(0) + 'k';
+    return '<tr>' +
+      '<td class="mt-rank">'   + r.rank + '</td>' +
+      '<td class="mt-suburb">' + r.suburb + '</td>' +
+      '<td class="mt-city">'   + r.city + '</td>' +
+      '<td><span class="st-badge st-' + r.state + '">' + r.state + '</span></td>' +
+      '<td class="' + pc  + '">' + pf + '</td>' +
+      '<td class="' + yc  + '">' + r.yield.toFixed(1) + '%</td>' +
+      '<td class="' + gc  + '">' + r.growth + '%</td>' +
+      '<td class="' + vc  + '">' + r.vac + '%</td>' +
+      '<td class="' + dc  + '">' + r.dsr + '</td>' +
+      '<td class="' + ijc + '">' + (IJ_LABEL[r.infraJobs] || r.infraJobs) + '</td>' +
+      '<td class="' + cc  + '">' + r.cycle + '</td>' +
+      '<td class="mt-note">'   + r.note + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function mtSort(col) {
+  if (mtSortCol === col) {
+    mtSortDir = mtSortDir * -1;
+  } else {
+    mtSortCol = col;
+    mtSortDir = ['suburb','city','state','cycle','infraJobs'].indexOf(col) >= 0 ? 1 : -1;
+  }
+  mtRender();
+}
+
+function mtReset() {
+  document.getElementById('mt-search').value = '';
+  document.getElementById('mt-state').value  = '';
+  document.getElementById('mt-ij').value     = '';
+  document.getElementById('mt-cycle').value  = '';
+  mtRender();
+}
+
+// Pre-render table on load
+mtRender();
