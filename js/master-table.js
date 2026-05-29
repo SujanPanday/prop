@@ -102,3 +102,6 @@ function mtReset() {
   document.getElementById('mt-ij').value     = '';
   mtRender();
 }
+
+// Pre-render on load so data is ready when the tab is clicked
+mtRender();

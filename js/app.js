@@ -68,9 +68,9 @@ let gradeFilter = 'all';
 // ── PAGE SWITCHING ──────────────────────────
 
 function showPage(page, el) {
-  document.getElementById('page-suburbs').style.display = page === 'suburbs' ? '' : 'none';
-  document.getElementById('page-table').style.display   = page === 'table'   ? '' : 'none';
-  document.getElementById('page-scout').style.display   = page === 'scout'   ? '' : 'none';
+  document.getElementById('page-suburbs').style.display = page === 'suburbs' ? 'block' : 'none';
+  document.getElementById('page-table').style.display   = page === 'table'   ? 'block' : 'none';
+  document.getElementById('page-scout').style.display   = page === 'scout'   ? 'block' : 'none';
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   if (page === 'table') mtRender();
