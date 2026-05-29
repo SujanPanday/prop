@@ -1,10 +1,12 @@
 // ─────────────────────────────────────────────
 //  SCORING ENGINE — 100 points total
-//  Works with MASTER_SUBURBS schema:
+//  Data fields used from MASTER_SUBURBS:
 //    vac (vacancy %), yield (gross yield %),
-//    growth (annual growth %), dsr (0-100),
-//    cycle ("Early"|"Mid"|"Late")
+//    dsr (0-100), infraJobs (categorical),
+//    cycle ("Early"|"Early-Mid"|"Mid"|"Late"|"Peak")
 // ─────────────────────────────────────────────
+
+// ① Demand vs Supply — 30 pts
 
 // 1a. Vacancy Rate → 15 pts (lower = better)
 function scoreVacancy(vac) {
@@ -16,47 +18,73 @@ function scoreDSR(dsr) {
   return dsr >= 70 ? 15 : dsr >= 63 ? 12 : dsr >= 58 ? 9 : dsr >= 55 ? 5 : dsr >= 52 ? 2 : 0;
 }
 
-// 2a. Annual Capital Growth % → 15 pts
-function scoreGrowth(growth) {
-  return growth >= 25 ? 15 : growth >= 20 ? 12 : growth >= 15 ? 9 : growth >= 10 ? 6 : growth >= 7 ? 3 : 0;
+// ② Growth Drivers — 30 pts
+
+// 2a. Infrastructure + Population + Jobs Combined → 15 pts
+function scoreInfraJobs(infraJobs) {
+  switch (infraJobs) {
+    case 'major':    return 15;
+    case 'strong':   return 12;
+    case 'moderate': return  9;
+    case 'weak':     return  5;
+    default:         return  0; // 'none'
+  }
 }
 
-// 2b. Market Cycle → 15 pts  (Early = most upside)
+// 2b. Market Cycle → 15 pts
 function scoreCycle(cycle) {
-  return cycle === 'Early' ? 15 : cycle === 'Mid' ? 9 : 3;
+  switch (cycle) {
+    case 'Early':     return 15;
+    case 'Early-Mid': return 12;
+    case 'Mid':       return  9;
+    case 'Late':      return  3;
+    case 'Peak':      return  0;
+    default:          return  9;
+  }
 }
+
+// ③ Cash Flow — 20 pts
 
 // 3a. Gross Yield % → 10 pts
 function scoreYield(y) {
   return y >= 6.5 ? 10 : y >= 6.0 ? 9 : y >= 5.5 ? 7 : y >= 5.0 ? 5 : y >= 4.5 ? 2 : 0;
 }
 
-// 3b. Yield Quality (sustainable cash flow) → 10 pts
-//     High yield is only sustainable if the market is also tight
+// 3b. Yield Quality — sustainable cash flow → 10 pts
+//     High yield is only sustainable in a tight rental market
 function scoreYieldQuality(y, vac) {
   if (y >= 6.0 && vac < 1.0) return 10;
-  if (y >= 5.5 && vac < 1.5) return 8;
-  if (y >= 5.0 && vac < 2.0) return 5;
-  if (y >= 4.5)               return 3;
+  if (y >= 5.5 && vac < 1.5) return  8;
+  if (y >= 5.0 && vac < 2.0) return  5;
+  if (y >= 4.5)               return  3;
   return 0;
 }
 
-// 4. Owner Occupier Proxy → 10 pts
-//    Tight vacancy + strong DSR = high owner-occ competition
+// ④ Owner Occupier Proxy — 10 pts
+//    Tight vacancy + strong DSR signals high owner-occ competition
 function scoreOwnerOcc(dsr, vac) {
   if (dsr >= 65 && vac < 0.5) return 10;
-  if (dsr >= 60 && vac < 1.0) return 8;
-  if (dsr >= 55 && vac < 1.5) return 5;
-  if (dsr >= 52 && vac < 2.0) return 2;
+  if (dsr >= 60 && vac < 1.0) return  8;
+  if (dsr >= 55 && vac < 1.5) return  5;
+  if (dsr >= 52 && vac < 2.0) return  2;
   return 0;
 }
 
-// 5a. Cycle Risk → 5 pts (Early cycle = lower downside risk)
+// ⑤ Risk Control — 10 pts
+
+// 5a. Cycle Risk → 5 pts (Early = lowest downside risk)
 function scoreCycleRisk(cycle) {
-  return cycle === 'Early' ? 5 : cycle === 'Mid' ? 3 : 1;
+  switch (cycle) {
+    case 'Early':     return 5;
+    case 'Early-Mid': return 4;
+    case 'Mid':       return 3;
+    case 'Late':      return 1;
+    case 'Peak':      return 0;
+    default:          return 3;
+  }
 }
 
-// 5b. Market Tightness Risk → 5 pts (tight = low vacancy risk)
+// 5b. Market Tightness Risk → 5 pts
 function scoreVacRisk(vac) {
   return vac < 0.5 ? 5 : vac < 1.0 ? 4 : vac < 2.0 ? 3 : vac < 3.0 ? 1 : 0;
 }
@@ -66,20 +94,20 @@ function scoreVacRisk(vac) {
 function scoreMasterSuburb(s) {
   const sc = {};
 
-  sc.vacancy     = scoreVacancy(s.vac);
-  sc.dsr         = scoreDSR(s.dsr);
-  sc.growth      = scoreGrowth(s.growth);
-  sc.cycle       = scoreCycle(s.cycle);
-  sc.yield_      = scoreYield(s.yield);
-  sc.yieldQual   = scoreYieldQuality(s.yield, s.vac);
-  sc.ownerOcc    = scoreOwnerOcc(s.dsr, s.vac);
-  sc.cycleRisk   = scoreCycleRisk(s.cycle);
-  sc.vacRisk     = scoreVacRisk(s.vac);
+  sc.vacancy   = scoreVacancy(s.vac);
+  sc.dsr       = scoreDSR(s.dsr);
+  sc.infraJobs = scoreInfraJobs(s.infraJobs);
+  sc.cycle     = scoreCycle(s.cycle);
+  sc.yield_    = scoreYield(s.yield);
+  sc.yieldQual = scoreYieldQuality(s.yield, s.vac);
+  sc.ownerOcc  = scoreOwnerOcc(s.dsr, s.vac);
+  sc.cycleRisk = scoreCycleRisk(s.cycle);
+  sc.vacRisk   = scoreVacRisk(s.vac);
 
   // Category subtotals for display + sorting
   sc.demandSupply  = sc.vacancy + sc.dsr;          // max 30
-  sc.growthDrivers = sc.growth  + sc.cycle;         // max 30
-  sc.cashFlow      = sc.yield_  + sc.yieldQual;    // max 20
+  sc.growthDrivers = sc.infraJobs + sc.cycle;       // max 30
+  sc.cashFlow      = sc.yield_ + sc.yieldQual;     // max 20
   sc.ownerOccTotal = sc.ownerOcc;                   // max 10
   sc.riskControl   = sc.cycleRisk + sc.vacRisk;    // max 10
 

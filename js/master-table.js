@@ -6,17 +6,21 @@
 let mtSortCol = 'rank';
 let mtSortDir = 1;
 
+const IJ_LABEL = { major: 'Major', strong: 'Strong', moderate: 'Moderate', weak: 'Weak', none: 'None' };
+const IJ_CLS   = { major: 'mtg',   strong: 'mtg',    moderate: 'mta',      weak: 'mtr',  none: 'mtr'  };
+const CY_CLS   = { 'Early': 'mtg', 'Early-Mid': 'mtg', 'Mid': 'mta', 'Late': 'mtr', 'Peak': 'mtr' };
+
 function mtRender() {
   const search = document.getElementById('mt-search').value.toLowerCase();
   const state  = document.getElementById('mt-state').value;
-  const verdict = document.getElementById('mt-verdict').value;
   const cycle  = document.getElementById('mt-cycle').value;
+  const ij     = document.getElementById('mt-ij').value;
 
   let data = MASTER_SUBURBS.filter(r => {
     if (search && !r.suburb.toLowerCase().includes(search) && !r.city.toLowerCase().includes(search)) return false;
-    if (state   && r.state   !== state)   return false;
-    if (verdict && r.verdict !== verdict) return false;
-    if (cycle   && r.cycle   !== cycle)   return false;
+    if (state && r.state     !== state) return false;
+    if (cycle && r.cycle     !== cycle) return false;
+    if (ij    && r.infraJobs !== ij)    return false;
     return true;
   });
 
@@ -27,25 +31,25 @@ function mtRender() {
   });
 
   // Update sort arrows
-  document.querySelectorAll('.mt-th span').forEach(e => e.textContent = '');
+  document.querySelectorAll('.mt-th').forEach(e => e.textContent = '');
   const arr = document.getElementById('mta-' + mtSortCol);
   if (arr) arr.textContent = mtSortDir === 1 ? ' ↑' : ' ↓';
 
-  // Summary counts
-  const counts = { sb: 0, co: 0, wa: 0, av: 0 };
+  // Summary bar — counts by infra/jobs level
+  const ij_counts = { major: 0, strong: 0, moderate: 0, weak: 0 };
   data.forEach(r => {
-    if      (r.verdict === 'Strong Buy')  counts.sb++;
-    else if (r.verdict === 'Conditional') counts.co++;
-    else if (r.verdict === 'Watch')       counts.wa++;
-    else                                  counts.av++;
+    if (r.infraJobs === 'major')    ij_counts.major++;
+    else if (r.infraJobs === 'strong')   ij_counts.strong++;
+    else if (r.infraJobs === 'moderate') ij_counts.moderate++;
+    else                                 ij_counts.weak++;
   });
 
   document.getElementById('mt-sum').innerHTML =
-    `<div class="sm"><div class="sm-n" style="color:var(--grade-a)">${counts.sb}</div><div class="sm-l">Strong Buy</div></div>` +
-    `<div class="sm"><div class="sm-n" style="color:var(--grade-b)">${counts.co}</div><div class="sm-l">Conditional</div></div>` +
-    `<div class="sm"><div class="sm-n" style="color:var(--grade-c)">${counts.wa}</div><div class="sm-l">Watch</div></div>` +
-    `<div class="sm"><div class="sm-n" style="color:var(--grade-d)">${counts.av}</div><div class="sm-l">Avoid</div></div>` +
-    `<div class="sm"><div class="sm-n" style="color:var(--muted2)">${data.length}</div><div class="sm-l">Shown</div></div>`;
+    `<div class="sm"><div class="sm-n" style="color:#4ade80">${ij_counts.major}</div><div class="sm-l">Major Infra</div></div>` +
+    `<div class="sm"><div class="sm-n" style="color:#38bdf8">${ij_counts.strong}</div><div class="sm-l">Strong Growth</div></div>` +
+    `<div class="sm"><div class="sm-n" style="color:#fbbf24">${ij_counts.moderate}</div><div class="sm-l">Moderate</div></div>` +
+    `<div class="sm"><div class="sm-n" style="color:#f87171">${ij_counts.weak}</div><div class="sm-l">Weak / None</div></div>` +
+    `<div class="sm"><div class="sm-n" style="color:#94a3b8">${data.length}</div><div class="sm-l">Shown</div></div>`;
 
   document.getElementById('mt-count').textContent = `${data.length} / ${MASTER_SUBURBS.length}`;
 
@@ -58,13 +62,11 @@ function mtRender() {
   tbody.innerHTML = data.map(r => {
     const yc  = r.yield  >= 5.5 ? 'mtg' : r.yield  >= 4.5 ? 'mta' : 'mtr';
     const gc  = r.growth >= 15  ? 'mtg' : r.growth >= 7   ? 'mta' : 'mtr';
-    const vc  = r.vac    <  0.6 ? 'mtg' : r.vac    <  2   ? 'mta' : 'mtr';
+    const vc  = r.vac    <  1.0 ? 'mtg' : r.vac    <  2.0 ? 'mta' : 'mtr';
     const dc  = r.dsr    >= 58  ? 'mtg' : r.dsr    >= 55  ? 'mta' : 'mtr';
-    const cc  = r.cycle === 'Early' ? 'mtg' : r.cycle === 'Mid' ? 'mta' : 'mtr';
+    const ijc = IJ_CLS[r.infraJobs] || 'mta';
+    const cc  = CY_CLS[r.cycle] || 'mta';
     const pc  = r.price <= 650000 ? 'mtg' : 'mtr';
-    const vcls = r.verdict === 'Strong Buy'  ? 'vdt-sb'
-               : r.verdict === 'Conditional' ? 'vdt-co'
-               : r.verdict === 'Watch'       ? 'vdt-wa' : 'vdt-av';
     const priceFmt = r.price >= 1000000
       ? '$' + (r.price / 1000000).toFixed(2) + 'M'
       : '$' + (r.price / 1000).toFixed(0) + 'k';
@@ -79,8 +81,8 @@ function mtRender() {
       <td class="${gc}">${r.growth}%</td>
       <td class="${vc}">${r.vac}%</td>
       <td class="${dc}">${r.dsr}</td>
+      <td class="${ijc}">${IJ_LABEL[r.infraJobs] || r.infraJobs}</td>
       <td class="${cc}">${r.cycle}</td>
-      <td><span class="vdt ${vcls}">${r.verdict}</span></td>
       <td class="mt-note">${r.note}</td>
     </tr>`;
   }).join('');
@@ -88,15 +90,15 @@ function mtRender() {
 
 function mtSort(col) {
   mtSortDir = (mtSortCol === col) ? mtSortDir * -1
-    : (['suburb','city','state','cycle','verdict'].includes(col) ? 1 : -1);
+    : (['suburb','city','state','cycle','infraJobs'].includes(col) ? 1 : -1);
   mtSortCol = col;
   mtRender();
 }
 
 function mtReset() {
-  document.getElementById('mt-search').value  = '';
-  document.getElementById('mt-state').value   = '';
-  document.getElementById('mt-verdict').value = '';
-  document.getElementById('mt-cycle').value   = '';
+  document.getElementById('mt-search').value = '';
+  document.getElementById('mt-state').value  = '';
+  document.getElementById('mt-cycle').value  = '';
+  document.getElementById('mt-ij').value     = '';
   mtRender();
 }

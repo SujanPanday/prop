@@ -20,10 +20,10 @@ const CATEGORIES = [
     key: 'growthDrivers',
     label: 'Growth Drivers',
     max: 30,
-    vals: s => `Growth: ${s.growth}%  ·  Cycle: ${s.cycle}`,
+    vals: s => `Infra/Jobs: ${s.infraJobs}  ·  Cycle: ${s.cycle}`,
     breakdown: s => {
       const sc = s.scores;
-      return `Growth ${s.growth}% → ${sc.growth}/15 pts &nbsp;|&nbsp; ${s.cycle} cycle → ${sc.cycle}/15 pts`;
+      return `Infra/Jobs (${s.infraJobs}) → ${sc.infraJobs}/15 pts &nbsp;|&nbsp; ${s.cycle} cycle → ${sc.cycle}/15 pts`;
     },
   },
   {

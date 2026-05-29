@@ -72,15 +72,15 @@
           <div class="legend-cat">
             <div class="legend-cat-title" style="color:var(--grade-a)">② Growth Drivers — 30 pts</div>
             <div class="legend-row">
-              <div class="legend-item-name">Annual Growth (15 pts)</div>
+              <div class="legend-item-name">Infra + Population + Jobs (15 pts)</div>
               <div class="legend-thresholds">
-                <span>≥25% = 15</span><span>≥20% = 12</span><span>≥15% = 9</span><span>≥10% = 6</span><span>≥7% = 3</span><span>&lt;7% = 0</span>
+                <span>Major = 15</span><span>Strong = 12</span><span>Moderate = 9</span><span>Weak = 5</span><span>None = 0</span>
               </div>
             </div>
             <div class="legend-row">
               <div class="legend-item-name">Market Cycle (15 pts)</div>
               <div class="legend-thresholds">
-                <span>Early = 15</span><span>Mid = 9</span><span>Late = 3</span>
+                <span>Early = 15</span><span>Early-Mid = 12</span><span>Mid = 9</span><span>Late = 3</span><span>Peak = 0</span>
               </div>
             </div>
           </div>
@@ -192,20 +192,23 @@
   <div class="mt-sum-bar" id="mt-sum"></div>
 
   <div class="mt-controls">
-    <input  type="text" id="mt-search"  placeholder="Search suburb or city…" oninput="mtRender()">
-    <select id="mt-state"   onchange="mtRender()">
+    <input  type="text" id="mt-search" placeholder="Search suburb or city…" oninput="mtRender()">
+    <select id="mt-state"  onchange="mtRender()">
       <option value="">All states</option>
       <option>NSW</option><option>QLD</option><option>VIC</option>
       <option>WA</option><option>SA</option><option>TAS</option><option>NT</option>
     </select>
-    <select id="mt-verdict" onchange="mtRender()">
-      <option value="">All verdicts</option>
-      <option>Strong Buy</option><option>Conditional</option>
-      <option>Watch</option><option>Avoid</option>
+    <select id="mt-ij"    onchange="mtRender()">
+      <option value="">All infra/jobs levels</option>
+      <option value="major">Major</option>
+      <option value="strong">Strong</option>
+      <option value="moderate">Moderate</option>
+      <option value="weak">Weak</option>
     </select>
-    <select id="mt-cycle"   onchange="mtRender()">
+    <select id="mt-cycle"  onchange="mtRender()">
       <option value="">All cycles</option>
-      <option>Early</option><option>Mid</option><option>Late</option>
+      <option>Early</option><option>Early-Mid</option>
+      <option>Mid</option><option>Late</option><option>Peak</option>
     </select>
     <button class="reset-btn" onclick="mtReset()">&#8635; Reset</button>
     <span class="mt-count-lbl" id="mt-count"></span>
@@ -215,17 +218,17 @@
     <table class="mt-table">
       <thead>
         <tr>
-          <th onclick="mtSort('rank')"   >#<span id="mta-rank" class="mt-th"> ↑</span></th>
-          <th onclick="mtSort('suburb')" >Suburb<span id="mta-suburb" class="mt-th"></span></th>
-          <th onclick="mtSort('city')"   >City / Region<span id="mta-city" class="mt-th"></span></th>
-          <th onclick="mtSort('state')"  >St<span id="mta-state" class="mt-th"></span></th>
-          <th onclick="mtSort('price')"  >Median $<span id="mta-price" class="mt-th"></span></th>
-          <th onclick="mtSort('yield')"  >Yield%<span id="mta-yield" class="mt-th"></span></th>
-          <th onclick="mtSort('growth')" >Growth%<span id="mta-growth" class="mt-th"></span></th>
-          <th onclick="mtSort('vac')"    >Vac%<span id="mta-vac" class="mt-th"></span></th>
-          <th onclick="mtSort('dsr')"    >DSR<span id="mta-dsr" class="mt-th"></span></th>
-          <th onclick="mtSort('cycle')"  >Cycle<span id="mta-cycle" class="mt-th"></span></th>
-          <th onclick="mtSort('verdict')">Verdict<span id="mta-verdict" class="mt-th"></span></th>
+          <th onclick="mtSort('rank')"    >#<span id="mta-rank" class="mt-th"> ↑</span></th>
+          <th onclick="mtSort('suburb')"  >Suburb<span id="mta-suburb" class="mt-th"></span></th>
+          <th onclick="mtSort('city')"    >City / Region<span id="mta-city" class="mt-th"></span></th>
+          <th onclick="mtSort('state')"   >St<span id="mta-state" class="mt-th"></span></th>
+          <th onclick="mtSort('price')"   >Median $<span id="mta-price" class="mt-th"></span></th>
+          <th onclick="mtSort('yield')"   >Yield%<span id="mta-yield" class="mt-th"></span></th>
+          <th onclick="mtSort('growth')"  >Growth%<span id="mta-growth" class="mt-th"></span></th>
+          <th onclick="mtSort('vac')"     >Vac%<span id="mta-vac" class="mt-th"></span></th>
+          <th onclick="mtSort('dsr')"     >DSR<span id="mta-dsr" class="mt-th"></span></th>
+          <th onclick="mtSort('infraJobs')">Infra / Jobs<span id="mta-infraJobs" class="mt-th"></span></th>
+          <th onclick="mtSort('cycle')"   >Cycle<span id="mta-cycle" class="mt-th"></span></th>
           <th>2026 Data Note</th>
         </tr>
       </thead>
@@ -259,5 +262,6 @@
 <script src="js/scorer.js"></script>
 <script src="js/app.js"></script>
 <script src="js/master-table.js"></script>
+<!-- suburbs-data.js removed — all data now in data/master-data.js -->
 </body>
 </html>
