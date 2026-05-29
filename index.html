@@ -6,583 +6,108 @@
 <title>AusPropertyIQ — Smart Suburb Finder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-<script src="suburbs.js"></script>
-<style>
-:root {
-  --bg:#0b0f14; --surface:#131820; --surface2:#1c2535; --surface3:#222f42;
-  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
-  --accent:#00d4a0; --accent-dim:rgba(0,212,160,0.12);
-  --text:#e8edf2; --muted:#6b7a8d; --muted2:#8a9ab0;
-  --green:#27b389; --green-bg:rgba(39,179,137,0.12);
-  --blue:#3d8ef0; --blue-bg:rgba(61,142,240,0.12);
-  --amber:#e08c2a; --amber-bg:rgba(224,140,42,0.12);
-  --red:#e04a4a; --red-bg:rgba(224,74,74,0.12);
-  --font-h:'Syne',sans-serif; --font-b:'DM Sans',sans-serif;
-  --r:10px; --r-lg:14px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:14px;line-height:1.5;overflow-x:hidden}
-
-/* noise */
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
-
-/* ── HERO ── */
-.hero{position:relative;padding:4.5rem 1.5rem 3rem;text-align:center;z-index:1;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:900px;height:500px;background:radial-gradient(ellipse,rgba(0,212,160,0.1) 0%,transparent 65%);pointer-events:none}
-.hero-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-h);font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(0,212,160,.3);border-radius:20px;padding:5px 14px;margin-bottom:1.4rem;animation:fadeUp .5s ease both}
-h1{font-family:var(--font-h);font-size:clamp(2rem,6vw,4rem);font-weight:800;line-height:1.05;letter-spacing:-.025em;margin-bottom:.9rem;animation:fadeUp .5s .08s ease both}
-h1 em{color:var(--accent);font-style:normal}
-.hero-sub{font-size:15px;color:var(--muted2);max-width:520px;margin:0 auto 1.8rem;line-height:1.75;animation:fadeUp .5s .14s ease both}
-
-/* criteria pills */
-.c-pills{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:2.5rem;animation:fadeUp .5s .2s ease both}
-.c-pill{font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);color:var(--muted2);transition:all .2s}
-.c-pill strong{color:var(--text)}
-
-/* stats bar */
-.stats{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;background:var(--border);border:1px solid var(--border2);border-radius:var(--r-lg);overflow:hidden;max-width:660px;margin:0 auto 0;animation:fadeUp .5s .26s ease both}
-.stat{flex:1;min-width:100px;background:var(--surface);padding:1.1rem .8rem;text-align:center;transition:background .2s}
-.stat:hover{background:var(--surface2)}
-.stat-n{font-family:var(--font-h);font-size:1.9rem;font-weight:700;line-height:1}
-.stat-l{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.04em}
-.n-g{color:var(--green)} .n-b{color:var(--blue)} .n-a{color:var(--amber)} .n-r{color:var(--red)} .n-w{color:var(--muted2)}
-
-/* ── MAIN ── */
-main{max-width:1280px;margin:0 auto;padding:2rem 1.25rem 5rem;position:relative;z-index:1}
-
-/* ── SCORE LEGEND ── */
-.legend-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.4rem;margin-bottom:1.25rem}
-.legend-title{font-family:var(--font-h);font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.7rem}
-.legend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem}
-.legend-item{display:flex;flex-direction:column;gap:2px}
-.legend-name{font-size:11px;color:var(--text);font-weight:500}
-.legend-desc{font-size:10px;color:var(--muted);line-height:1.4}
-.max-pts{font-size:10px;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:1px 6px;border-radius:4px;display:inline-block;margin-top:2px}
-
-/* ── CONTROLS ── */
-.controls{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
-.ctrl-group{display:flex;flex-direction:column;gap:5px}
-.ctrl-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
-input[type=text],select{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--font-b);font-size:13px;padding:8px 11px;outline:none;transition:border-color .2s;min-width:140px}
-input[type=text]:focus,select:focus{border-color:var(--accent)}
-select option{background:#131820}
-.reset-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);border-radius:var(--r);padding:8px 16px;font-family:var(--font-b);font-size:12px;cursor:pointer;transition:all .2s;align-self:flex-end}
-.reset-btn:hover{border-color:var(--accent);color:var(--accent)}
-.res-count{font-size:12px;color:var(--muted);align-self:flex-end;margin-left:auto}
-
-/* verdict filter chips */
-.vchips{display:flex;flex-wrap:wrap;gap:6px}
-.vchip{font-size:11px;font-weight:600;padding:6px 13px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .18s;font-family:var(--font-b)}
-.vchip:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
-.vchip.on-all{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
-.vchip.on-strong{border-color:var(--green);background:var(--green-bg);color:var(--green)}
-.vchip.on-cond{border-color:var(--blue);background:var(--blue-bg);color:var(--blue)}
-.vchip.on-watch{border-color:var(--amber);background:var(--amber-bg);color:var(--amber)}
-.vchip.on-avoid{border-color:var(--red);background:var(--red-bg);color:var(--red)}
-
-/* sort bar */
-.sort-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
-.sort-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;font-weight:600}
-.sbtn{font-size:11px;padding:5px 11px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--font-b);transition:all .18s}
-.sbtn:hover,.sbtn.on{background:var(--surface2);color:var(--text);border-color:var(--border2)}
-
-/* ── GRID ── */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:13px}
-
-/* ── CARD ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s;cursor:pointer;position:relative}
-.card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 12px 40px rgba(0,0,0,.4)}
-.card.v-strong{border-top:2px solid var(--green)}
-.card.v-cond{border-top:2px solid var(--blue)}
-.card.v-watch{border-top:2px solid var(--amber)}
-.card.v-avoid{border-top:2px solid var(--red)}
-
-/* card header */
-.ch{padding:1rem 1.15rem .75rem;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.ch-left{flex:1;min-width:0}
-.cname{font-family:var(--font-h);font-size:15px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cloc{font-size:11px;color:var(--muted);margin-top:2px}
-.ch-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
-.st-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.05em}
-.st-NSW{background:rgba(77,166,255,.15);color:#4da6ff}
-.st-QLD{background:rgba(255,107,53,.15);color:#ff6b35}
-.st-VIC{background:rgba(0,212,160,.15);color:#00d4a0}
-.st-WA{background:rgba(180,100,255,.15);color:#b464ff}
-.st-SA{background:rgba(255,210,50,.15);color:#ffd232}
-.st-TAS{background:rgba(100,180,255,.15);color:#64b4ff}
-.price-tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:4px}
-
-/* cycle badge */
-.cycle-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
-.cycle-early{background:rgba(0,212,160,.15);color:var(--accent)}
-.cycle-mid{background:rgba(61,142,240,.15);color:var(--blue)}
-.cycle-late{background:rgba(224,140,42,.18);color:var(--amber)}
-.cycle-peak{background:rgba(224,74,74,.15);color:var(--red)}
-
-/* metrics row */
-.mrow{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.metric{background:var(--surface);padding:.6rem .5rem;text-align:center}
-.mv{font-family:var(--font-h);font-size:14px;font-weight:700}
-.mv.g{color:var(--green)} .mv.a{color:var(--amber)} .mv.r{color:var(--red)}
-.ml{font-size:9px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
-
-/* total score bar */
-.score-section{padding:.75rem 1.15rem .5rem}
-.score-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.score-label{font-size:11px;color:var(--muted)}
-.score-num{font-family:var(--font-h);font-size:13px;font-weight:700}
-.score-bar-track{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
-.score-bar-fill{height:100%;border-radius:3px;transition:width .3s ease}
-
-/* criteria grid */
-.crit-grid{padding:.6rem 1.15rem .8rem;display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.crit-row{display:flex;align-items:center;gap:6px}
-.crit-bar-wrap{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
-.crit-bar{height:100%;border-radius:2px}
-.crit-name{font-size:10px;color:var(--muted);width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.crit-score{font-size:10px;font-weight:600;width:22px;text-align:right;flex-shrink:0}
-
-/* card footer */
-.cf{padding:.65rem 1.15rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)}
-.verdict{font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.04em;text-transform:uppercase}
-.v-strong .verdict{background:var(--green-bg);color:var(--green)}
-.v-cond .verdict{background:var(--blue-bg);color:var(--blue)}
-.v-watch .verdict{background:var(--amber-bg);color:var(--amber)}
-.v-avoid .verdict{background:var(--red-bg);color:var(--red)}
-.total-pts{font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--muted2)}
-.total-pts span{color:var(--text)}
-
-/* expanded note */
-.card-note{display:none;padding:.65rem 1.15rem .8rem;font-size:11px;color:var(--muted2);line-height:1.65;border-top:1px solid var(--border);background:var(--surface2)}
-.card.open .card-note{display:block}
-.note-eco{font-size:10px;color:var(--muted);margin-top:.4rem}
-.note-eco strong{color:var(--muted2)}
-.tap-hint{font-size:9px;color:var(--muted);opacity:.5;position:absolute;bottom:7px;right:10px}
-
-/* no results */
-.no-res{text-align:center;padding:5rem 2rem;color:var(--muted)}
-.no-res span{font-size:3rem;display:block;margin-bottom:1rem}
-
-/* footer */
-footer{text-align:center;padding:2rem 1rem;font-size:11px;color:var(--muted);border-top:1px solid var(--border);position:relative;z-index:1}
-footer a{color:var(--accent);text-decoration:none}
-
-/* animations */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.card{animation:fadeUp .35s ease both}
-
-@media(max-width:600px){
-  .grid{grid-template-columns:1fr}
-  .crit-grid{grid-template-columns:1fr}
-  h1{font-size:2rem}
-  .legend-grid{grid-template-columns:1fr 1fr}
-}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-tag">🇦🇺 Australian Property Intelligence</div>
-  <h1>Find Your<br><em>Next Investment</em></h1>
-  <p class="hero-sub">Every suburb scored across 8 criteria using a 5-point scale — so you can separate the best from the rest, not just pass from fail.</p>
-  <div class="c-pills">
-    <div class="c-pill"><strong>① Yield</strong> &gt;4.5% → 5pts</div>
-    <div class="c-pill"><strong>② Growth</strong> ≥7% → 5pts</div>
-    <div class="c-pill"><strong>③ Vacancy</strong> &lt;2% → 5pts</div>
-    <div class="c-pill"><strong>④ DSR/Supply</strong> ≥55 → 5pts</div>
-    <div class="c-pill"><strong>⑤ Migration</strong> positive → 5pts</div>
-    <div class="c-pill"><strong>⑥ Economy</strong> diversified → 5pts</div>
-    <div class="c-pill"><strong>⑦ Budget</strong> under $650k → 5pts</div>
-    <div class="c-pill"><strong>⑧ Cycle stage</strong> early = best → 5pts</div>
+<nav class="top-nav">
+  <div class="nav-brand">AusPropertyIQ</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('suburbs', this)">Suburb Table</button>
+    <button class="nav-tab" onclick="showPage('scout', this)">Property Scout</button>
   </div>
-  <div class="stats" id="statsBar">
-    <div class="stat"><div class="stat-n n-g" id="s-strong">—</div><div class="stat-l">Strong Buy</div></div>
-    <div class="stat"><div class="stat-n n-b" id="s-cond">—</div><div class="stat-l">Conditional</div></div>
-    <div class="stat"><div class="stat-n n-a" id="s-watch">—</div><div class="stat-l">Watch</div></div>
-    <div class="stat"><div class="stat-n n-r" id="s-avoid">—</div><div class="stat-l">Avoid</div></div>
-    <div class="stat"><div class="stat-n n-w" id="s-total">—</div><div class="stat-l">Suburbs</div></div>
-    <div class="stat"><div class="stat-n n-w" id="s-max">40</div><div class="stat-l">Max Score</div></div>
+</nav>
+
+<!-- ── SUBURB TABLE PAGE ── -->
+<div id="page-suburbs">
+
+  <div class="hero">
+    <div class="hero-tag">🇦🇺 Australian Property Intelligence 2026</div>
+    <h1>Find Your<br><em>Best Investment</em></h1>
+    <p class="hero-sub">28 suburbs ranked on a 100-point system across 5 fundamentals — demand, growth, cash flow, desirability, and risk.</p>
+
+    <div class="grade-pills">
+      <div class="grade-pill"><span class="gp-badge" style="color:var(--grade-aplus)">A+</span>90–100 · Elite Buy</div>
+      <div class="grade-pill"><span class="gp-badge" style="color:var(--grade-a)">A</span>80–89 · Strong Buy</div>
+      <div class="grade-pill"><span class="gp-badge" style="color:var(--grade-b)">B</span>70–79 · Good Opportunity</div>
+      <div class="grade-pill"><span class="gp-badge" style="color:var(--grade-c)">C</span>60–69 · Watchlist</div>
+      <div class="grade-pill"><span class="gp-badge" style="color:var(--grade-d)">D</span>&lt;60 · Reject</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-n" style="color:var(--grade-aplus)" id="s-aplus">—</div><div class="stat-l">A+ Elite</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--grade-a)"     id="s-a">—</div><div class="stat-l">A Strong Buy</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--grade-b)"     id="s-b">—</div><div class="stat-l">B Good</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--grade-c)"     id="s-c">—</div><div class="stat-l">C Watchlist</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--grade-d)"     id="s-d">—</div><div class="stat-l">D Reject</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--muted2)"      id="s-total">—</div><div class="stat-l">Suburbs</div></div>
+    </div>
+  </div>
+
+  <main>
+    <div class="controls">
+      <div class="ctrl-group">
+        <div class="ctrl-label">Search</div>
+        <input type="text" id="searchInput" placeholder="Suburb or city…">
+      </div>
+      <div class="ctrl-group">
+        <div class="ctrl-label">State</div>
+        <select id="stateFilter">
+          <option value="">All states</option>
+          <option>NSW</option><option>QLD</option><option>VIC</option>
+          <option>WA</option><option>SA</option><option>TAS</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <div class="ctrl-label">Grade</div>
+        <div class="vchips">
+          <button class="vchip on-all" data-g="all"     onclick="setGrade('all',this)">All</button>
+          <button class="vchip"        data-g="g-aplus"  onclick="setGrade('g-aplus',this)">A+</button>
+          <button class="vchip"        data-g="g-a"      onclick="setGrade('g-a',this)">A</button>
+          <button class="vchip"        data-g="g-b"      onclick="setGrade('g-b',this)">B</button>
+          <button class="vchip"        data-g="g-c"      onclick="setGrade('g-c',this)">C</button>
+          <button class="vchip"        data-g="g-d"      onclick="setGrade('g-d',this)">D</button>
+        </div>
+      </div>
+      <button class="reset-btn" onclick="resetAll()">&#8635; Reset</button>
+      <div class="res-count" id="resCount"></div>
+    </div>
+
+    <div class="sort-bar">
+      <span class="sort-lbl">Sort by</span>
+      <button class="sbtn on"  onclick="setSort('total',this)">Total Score</button>
+      <button class="sbtn"     onclick="setSort('demandSupply',this)">Demand/Supply</button>
+      <button class="sbtn"     onclick="setSort('growthDrivers',this)">Growth</button>
+      <button class="sbtn"     onclick="setSort('grossYield',this)">Yield</button>
+      <button class="sbtn"     onclick="setSort('vacancyRate',this)">Vacancy</button>
+      <button class="sbtn"     onclick="setSort('suburb',this)">Name A–Z</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="no-res" id="noRes" style="display:none">
+      <span>🔍</span>No suburbs match — try broadening your filters.
+    </div>
+  </main>
+
+</div>
+
+<!-- ── PROPERTY SCOUT PAGE ── -->
+<div id="page-scout" style="display:none">
+  <div class="coming-soon">
+    <div class="coming-soon-icon">🔍</div>
+    <span class="coming-badge">Coming Soon</span>
+    <h2>Property Scout</h2>
+    <p>Search and analyse individual properties within our top-rated suburbs. Get detailed reports on specific addresses, rental estimates, and investment projections.</p>
   </div>
 </div>
 
-<main>
-
-  <!-- SCORING LEGEND -->
-  <div class="legend-box">
-    <div class="legend-title">How scoring works — each criterion rated 1–5 pts (max 40 pts total)</div>
-    <div class="legend-grid">
-      <div class="legend-item">
-        <div class="legend-name">① Gross Yield</div>
-        <div class="legend-desc">5=≥6.5% · 4=5.5–6.5% · 3=4.5–5.5% · 2=3.5–4.5% · 1=&lt;3.5%</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-name">② Annual Growth</div>
-        <div class="legend-desc">5=≥20% · 4=15–20% · 3=10–15% · 2=7–10% · 1=&lt;7%</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-name">③ Vacancy Rate</div>
-        <div class="legend-desc">5=&lt;0.3% · 4=0.3–0.6% · 3=0.6–1.0% · 2=1.0–2.0% · 1=≥2%</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-name">④ DSR / Supply</div>
-        <div class="legend-desc">5=≥62 · 4=58–61 · 3=55–57 · 2=52–54 · 1=&lt;52</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-name">⑤ Net Migration</div>
-        <div class="legend-desc">5=strong positive · 3=positive · 1=negative or flat</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-name">⑥ Economy</div>
-        <div class="legend-desc">5=highly diversified · 3=partially diversified · 1=single industry</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-name">⑦ Budget Fit</div>
-        <div class="legend-desc">5=&lt;$450k · 4=$450–550k · 3=$550–650k · 2=$650–750k · 1=&gt;$750k</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-name">⑧ Cycle Stage</div>
-        <div class="legend-desc">5=early (most upside) · 3=mid cycle · 2=late · 1=peak (near top)</div>
-        <span class="max-pts">5 pts</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTROLS -->
-  <div class="controls">
-    <div class="ctrl-group">
-      <div class="ctrl-label">Search</div>
-      <input type="text" id="searchInput" placeholder="Suburb or city…">
-    </div>
-    <div class="ctrl-group">
-      <div class="ctrl-label">State</div>
-      <select id="stateFilter">
-        <option value="">All states</option>
-        <option>NSW</option><option>QLD</option><option>VIC</option>
-        <option>WA</option><option>SA</option><option>TAS</option>
-      </select>
-    </div>
-    <div class="ctrl-group">
-      <div class="ctrl-label">Verdict</div>
-      <div class="vchips">
-        <button class="vchip on-all" data-v="all" onclick="setV('all',this)">All</button>
-        <button class="vchip" data-v="v-strong" onclick="setV('v-strong',this)">Strong Buy</button>
-        <button class="vchip" data-v="v-cond" onclick="setV('v-cond',this)">Conditional</button>
-        <button class="vchip" data-v="v-watch" onclick="setV('v-watch',this)">Watch</button>
-        <button class="vchip" data-v="v-avoid" onclick="setV('v-avoid',this)">Avoid</button>
-      </div>
-    </div>
-    <div class="ctrl-group">
-      <div class="ctrl-label">Max Budget</div>
-      <select id="priceFilter">
-        <option value="">Any budget</option>
-        <option value="450000">Under $450k</option>
-        <option value="500000">Under $500k</option>
-        <option value="550000">Under $550k</option>
-        <option value="600000">Under $600k</option>
-        <option value="650000">Under $650k</option>
-      </select>
-    </div>
-    <div class="ctrl-group">
-      <div class="ctrl-label">Cycle Stage</div>
-      <select id="cycleFilter">
-        <option value="">Any stage</option>
-        <option value="early">Early (most upside)</option>
-        <option value="mid">Mid cycle</option>
-        <option value="late">Late cycle</option>
-        <option value="peak">Peak</option>
-      </select>
-    </div>
-    <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
-    <div class="res-count" id="resCount"></div>
-  </div>
-
-  <!-- SORT BAR -->
-  <div class="sort-bar">
-    <span class="sort-lbl">Sort by</span>
-    <button class="sbtn on" onclick="setSort('total',this)">Total Score</button>
-    <button class="sbtn" onclick="setSort('yield_',this)">Yield</button>
-    <button class="sbtn" onclick="setSort('growth',this)">Growth</button>
-    <button class="sbtn" onclick="setSort('vac',this)">Vacancy</button>
-    <button class="sbtn" onclick="setSort('price',this)">Price</button>
-    <button class="sbtn" onclick="setSort('suburb',this)">Name A–Z</button>
-  </div>
-
-  <!-- GRID -->
-  <div class="grid" id="grid"></div>
-  <div class="no-res" id="noRes" style="display:none">
-    <span>🔍</span>No suburbs match — try broadening your filters.
-  </div>
-</main>
-
 <footer>
-  Data sources: PropTrack · CoreLogic · SQM Research · Hotspotting · DSR Market Matcher · Propertyology<br>
+  Data sources: PropTrack · CoreLogic · SQM Research · Hotspotting · ABS 2026<br>
   <a href="#">AusPropertyIQ</a> · For research purposes only — not financial advice · Always seek independent professional advice before investing
 </footer>
 
-<script>
-// ─────────────────────────────────────────────
-//  SCORING ENGINE — 5 points per criterion
-// ─────────────────────────────────────────────
-function scoreSuburb(s) {
-  const scores = {};
-
-  // ① Yield (5pts)
-  if      (s.yield_ >= 6.5) scores.yield_ = 5;
-  else if (s.yield_ >= 5.5) scores.yield_ = 4;
-  else if (s.yield_ >= 4.5) scores.yield_ = 3;
-  else if (s.yield_ >= 3.5) scores.yield_ = 2;
-  else                       scores.yield_ = 1;
-
-  // ② Growth (5pts)
-  if      (s.growth >= 20) scores.growth = 5;
-  else if (s.growth >= 15) scores.growth = 4;
-  else if (s.growth >= 10) scores.growth = 3;
-  else if (s.growth >= 7)  scores.growth = 2;
-  else                      scores.growth = 1;
-
-  // ③ Vacancy (5pts — lower is better)
-  if      (s.vac < 0.3)  scores.vac = 5;
-  else if (s.vac < 0.6)  scores.vac = 4;
-  else if (s.vac < 1.0)  scores.vac = 3;
-  else if (s.vac < 2.0)  scores.vac = 2;
-  else                    scores.vac = 1;
-
-  // ④ DSR / Supply (5pts)
-  if      (s.dsr >= 62) scores.dsr = 5;
-  else if (s.dsr >= 58) scores.dsr = 4;
-  else if (s.dsr >= 55) scores.dsr = 3;
-  else if (s.dsr >= 52) scores.dsr = 2;
-  else                   scores.dsr = 1;
-
-  // ⑤ Net Migration (5pts)
-  // migPos=true + strong economy indicator = 5, migPos=true = 3, false = 1
-  if (s.migPos && s.ecoDiv) scores.mig = 5;
-  else if (s.migPos)         scores.mig = 3;
-  else                        scores.mig = 1;
-
-  // ⑥ Economy diversification (5pts)
-  const eco = s.eco.toLowerCase();
-  const singleKeywords = ['concentrated','only','gold','iron ore','cotton','coal'];
-  const isSingle = singleKeywords.some(k => eco.includes(k));
-  const diverseKeywords = ['defence','health','uni','tourism','logistics','education','port'];
-  const isHighDiv = diverseKeywords.filter(k => eco.includes(k)).length >= 2;
-  if (isHighDiv)     scores.eco = 5;
-  else if (!isSingle) scores.eco = 3;
-  else                scores.eco = 1;
-
-  // ⑦ Budget fit ($650k target — lower = better score) (5pts)
-  if      (s.price < 450000)  scores.budget = 5;
-  else if (s.price < 550000)  scores.budget = 4;
-  else if (s.price < 650000)  scores.budget = 3;
-  else if (s.price < 750000)  scores.budget = 2;
-  else                         scores.budget = 1;
-
-  // ⑧ Cycle stage (5pts — early = most upside)
-  const cycleMap = {early:5, mid:3, late:2, peak:1};
-  scores.cycle = cycleMap[s.cycleStage] || 3;
-
-  scores.total = Object.values(scores).reduce((a,b)=>a+b,0);
-  return scores;
-}
-
-// ─────────────────────────────────────────────
-//  VERDICT from total score (max 40)
-// ─────────────────────────────────────────────
-function getVerdict(total) {
-  if (total >= 30) return {label:'Strong Buy', cls:'v-strong'};
-  if (total >= 24) return {label:'Conditional', cls:'v-cond'};
-  if (total >= 18) return {label:'Watch', cls:'v-watch'};
-  return {label:'Avoid', cls:'v-avoid'};
-}
-
-// Score all suburbs once
-const DATA = SUBURBS.map(s => ({...s, scores: scoreSuburb(s)}));
-
-// State
-let sortCol = 'total', sortDir = -1, verdictF = 'all';
-
-function setV(v, el) {
-  verdictF = v;
-  document.querySelectorAll('.vchip').forEach(c => c.className = 'vchip');
-  el.classList.add('on-' + (v === 'all' ? 'all' : v.replace('v-','')));
-  render();
-}
-
-function setSort(col, el) {
-  sortDir = (sortCol === col) ? sortDir * -1 : (col === 'suburb' ? 1 : -1);
-  sortCol = col;
-  document.querySelectorAll('.sbtn').forEach(b => b.classList.remove('on'));
-  if (el) el.classList.add('on');
-  render();
-}
-
-function resetAll() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('stateFilter').value = '';
-  document.getElementById('priceFilter').value = '';
-  document.getElementById('cycleFilter').value = '';
-  verdictF = 'all';
-  document.querySelectorAll('.vchip').forEach(c => c.className = 'vchip');
-  document.querySelector('[data-v="all"]').classList.add('on-all');
-  render();
-}
-
-// Score bar colour gradient
-function scoreColor(pct) {
-  if (pct >= 0.75) return '#27b389';
-  if (pct >= 0.6)  return '#3d8ef0';
-  if (pct >= 0.45) return '#e08c2a';
-  return '#e04a4a';
-}
-
-// Criterion display config
-const CRIT_CFG = [
-  {key:'yield_', label:'Yield'},
-  {key:'growth', label:'Growth'},
-  {key:'vac',    label:'Vacancy'},
-  {key:'dsr',    label:'DSR/Supply'},
-  {key:'mig',    label:'Migration'},
-  {key:'eco',    label:'Economy'},
-  {key:'budget', label:'Budget'},
-  {key:'cycle',  label:'Cycle Stage'},
-];
-
-function render() {
-  const search  = document.getElementById('searchInput').value.toLowerCase();
-  const state   = document.getElementById('stateFilter').value;
-  const maxP    = parseInt(document.getElementById('priceFilter').value) || 0;
-  const cycle   = document.getElementById('cycleFilter').value;
-
-  let data = DATA.filter(s => {
-    if (search && !s.suburb.toLowerCase().includes(search) && !s.city.toLowerCase().includes(search)) return false;
-    if (state && s.state !== state) return false;
-    if (maxP && s.price > maxP) return false;
-    if (cycle && s.cycleStage !== cycle) return false;
-    if (verdictF !== 'all') {
-      const v = getVerdict(s.scores.total);
-      if (v.cls !== verdictF) return false;
-    }
-    return true;
-  });
-
-  // Sort
-  data.sort((a,b) => {
-    const av = sortCol === 'total' ? a.scores.total : a[sortCol];
-    const bv = sortCol === 'total' ? b.scores.total : b[sortCol];
-    if (typeof av === 'string') return sortDir * av.localeCompare(bv);
-    return sortDir * (bv - av);
-  });
-
-  // Stats (always from full DATA)
-  const counts = {strong:0,cond:0,watch:0,avoid:0};
-  DATA.forEach(s => {
-    const v = getVerdict(s.scores.total).cls;
-    if (v==='v-strong') counts.strong++;
-    else if (v==='v-cond') counts.cond++;
-    else if (v==='v-watch') counts.watch++;
-    else counts.avoid++;
-  });
-  document.getElementById('s-strong').textContent = counts.strong;
-  document.getElementById('s-cond').textContent   = counts.cond;
-  document.getElementById('s-watch').textContent  = counts.watch;
-  document.getElementById('s-avoid').textContent  = counts.avoid;
-  document.getElementById('s-total').textContent  = DATA.length;
-  document.getElementById('resCount').textContent = `${data.length} suburb${data.length!==1?'s':''} shown`;
-
-  const grid  = document.getElementById('grid');
-  const noRes = document.getElementById('noRes');
-
-  if (!data.length) { grid.innerHTML=''; noRes.style.display='block'; return; }
-  noRes.style.display = 'none';
-
-  const MAX_SCORE = 40;
-
-  grid.innerHTML = data.map((s,i) => {
-    const sc  = s.scores;
-    const v   = getVerdict(sc.total);
-    const pct = sc.total / MAX_SCORE;
-    const barColor = scoreColor(pct);
-
-    // metric colours
-    const yc = sc.yield_>=3?'g':sc.yield_>=2?'a':'r';
-    const gc = sc.growth>=3?'g':sc.growth>=2?'a':'r';
-    const vc = sc.vac>=3?'g':sc.vac>=2?'a':'r';
-
-    // criteria mini-bars
-    const critBars = CRIT_CFG.map(c => {
-      const pts = sc[c.key] || 0;
-      const w   = (pts/5)*100;
-      const col = pts>=4?'#27b389':pts>=3?'#3d8ef0':pts>=2?'#e08c2a':'#e04a4a';
-      return `<div class="crit-row">
-        <div class="crit-name">${c.label}</div>
-        <div class="crit-bar-wrap"><div class="crit-bar" style="width:${w}%;background:${col}"></div></div>
-        <div class="crit-score" style="color:${col}">${pts}</div>
-      </div>`;
-    }).join('');
-
-    const cycleCls = `cycle-${s.cycleStage}`;
-    const cycleLabels = {early:'Early cycle',mid:'Mid cycle',late:'Late cycle',peak:'Peak'};
-
-    return `<div class="card ${v.cls}" style="animation-delay:${Math.min(i*.03,.45)}s" onclick="this.classList.toggle('open')">
-      <div class="ch">
-        <div class="ch-left">
-          <div class="cname">${s.suburb}</div>
-          <div class="cloc">${s.city} · ${s.state}</div>
-        </div>
-        <div class="ch-right">
-          <span class="st-badge st-${s.state}">${s.state}</span>
-          <span class="price-tag">$${(s.price/1000).toFixed(0)}k</span>
-          <span class="cycle-badge ${cycleCls}">${cycleLabels[s.cycleStage]||'Mid'}</span>
-        </div>
-      </div>
-
-      <div class="mrow">
-        <div class="metric"><div class="mv ${gc}">~${s.growth}%</div><div class="ml">Growth</div></div>
-        <div class="metric"><div class="mv ${yc}">${s.yield_.toFixed(2)}%</div><div class="ml">Yield</div></div>
-        <div class="metric"><div class="mv ${vc}">${s.vac}%</div><div class="ml">Vacancy</div></div>
-      </div>
-
-      <div class="score-section">
-        <div class="score-top">
-          <span class="score-label">Total score</span>
-          <span class="score-num" style="color:${barColor}">${sc.total} / ${MAX_SCORE}</span>
-        </div>
-        <div class="score-bar-track">
-          <div class="score-bar-fill" style="width:${pct*100}%;background:${barColor}"></div>
-        </div>
-      </div>
-
-      <div class="crit-grid">${critBars}</div>
-
-      <div class="cf">
-        <span class="verdict">${v.label}</span>
-        <span class="total-pts"><span>${sc.total}</span>/${MAX_SCORE} pts</span>
-      </div>
-
-      <div class="card-note">
-        ${s.note}
-        <div class="note-eco"><strong>Economy:</strong> ${s.eco}</div>
-      </div>
-      <div class="tap-hint">tap for notes ↓</div>
-    </div>`;
-  }).join('');
-}
-
-// Init
-document.getElementById('searchInput').addEventListener('input', render);
-document.getElementById('stateFilter').addEventListener('change', render);
-document.getElementById('priceFilter').addEventListener('change', render);
-document.getElementById('cycleFilter').addEventListener('change', render);
-render();
-</script>
+<script src="data/suburbs-data.js"></script>
+<script src="js/scorer.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
