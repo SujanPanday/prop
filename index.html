@@ -346,7 +346,7 @@
       <summary class="legend-summary">How property scoring works — 100 points across 6 categories</summary>
       <div class="legend-body">
         <div class="legend-note" style="margin-bottom:1rem;font-weight:500;color:var(--fg)">
-          Hard filters auto-reject: price &gt;$650k · not a house · &lt;3 bed · &lt;2 bath · &lt;400m² · flood/heritage/extreme bushfire overlay · structural issues · crime pocket · main road · industrial adjacency · suburb grade D
+          Stage 1 hard rejects (any = instant fail): price &gt;$650k · not a house · &lt;3 bed · &lt;2 bath · &lt;400m² · flood overlay · heritage overlay · extreme bushfire · structural issues · crime pocket · main road frontage · industrial adjacency · poor street reputation · suburb grade D
         </div>
         <div class="legend-cols">
           <div class="legend-cat">
@@ -372,8 +372,8 @@
             <div class="legend-row"><div class="legend-item-name">Positives</div>
               <div class="legend-thresholds"><span>Cul-de-sac = +5</span><span>Quiet street = +5</span><span>No through traffic = +3</span><span>Owner occ street = +3</span><span>Maintained = +2</span><span>Presentation = +2</span></div>
             </div>
-            <div class="legend-row"><div class="legend-item-name">Penalties</div>
-              <div class="legend-thresholds"><span>Rail backing = −5</span><span>Commercial backing = −5</span></div>
+            <div class="legend-row"><div class="legend-item-name">Penalties (auto-applied)</div>
+              <div class="legend-thresholds"><span>Main road = −10</span><span>Industrial = −10</span><span>Rail backing = −5</span><span>Commercial backing = −5</span></div>
             </div>
           </div>
           <div class="legend-cat">
@@ -458,7 +458,7 @@
 
   <div class="mt-header">
     <div class="mt-title">Property Data Table</div>
-    <div class="mt-sub" id="pt-count">0 properties · Add your own — suburb data auto-linked from the 438-suburb database</div>
+    <div class="mt-sub" id="pt-count">0 properties · Score · Grade · Address · Suburb · Price · Land · Bed·Bath · Garage · Age · Sub.Score · Yield% · Rent/wk · Growth% · Vac% · Cycle</div>
   </div>
 
   <div class="mt-controls">
@@ -497,16 +497,22 @@
     <table class="mt-table">
       <thead>
         <tr>
-          <th onclick="ptSort('score')"  >Score</th>
+          <th onclick="ptSort('score')" >Score</th>
+          <th>Grade</th>
           <th onclick="ptSort('address')">Address</th>
           <th onclick="ptSort('suburb')" >Suburb</th>
           <th>St</th>
           <th onclick="ptSort('price')"  >Price</th>
-          <th onclick="ptSort('beds')"   >Bed</th>
-          <th>Bath</th>
           <th onclick="ptSort('land')"   >Land m²</th>
-          <th>Suburb Score</th>
-          <th>Grade</th>
+          <th onclick="ptSort('beds')"   >Bed·Bath</th>
+          <th>Garage</th>
+          <th onclick="ptSort('age')"    >Age</th>
+          <th>Sub.Score</th>
+          <th onclick="ptSort('yield')"  >Yield%</th>
+          <th>Rent/wk</th>
+          <th onclick="ptSort('growth')" >Growth%</th>
+          <th onclick="ptSort('vac')"    >Vac%</th>
+          <th>Cycle</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -628,6 +634,10 @@
             <div class="sc-tog-item">
               <div class="sc-tog-label">Adjacent industrial?</div>
               <button type="button" id="sf-industrial" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Poor street reputation?</div>
+              <button type="button" id="sf-poorstreet" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
             </div>
           </div>
         </div>
