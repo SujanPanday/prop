@@ -70,7 +70,7 @@ function scoreVacRisk(vac) {
 return vac < 0.5 ? 2 : vac < 1.0 ? 2 : vac < 2.0 ? 1 : 0;
 }
 const CITY_POP = {
-'Perth SE':2300,'Perth NE':2300,'Perth North':2300,'Perth South':2300,
+'Perth SE':95,'Perth NE':175,'Perth North':240,'Perth South':85,
 'Rockingham':150,'Kwinana':52,'Mandurah':95,'Murray':15,
 'Bunbury':75,'Collie':8,'Narrogin':6,'Northam':8,
 'Merredin':3,'Manjimup':5,'Mount Barker':4,'Geraldton':40,
