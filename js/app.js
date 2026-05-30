@@ -13,11 +13,21 @@ return `Vac ${s.vac}% → ${sc.vacancy}/15 pts &nbsp;|&nbsp; DSR ${s.dsr} → ${
 {
 key: 'growthDrivers',
 label: 'Growth Drivers',
-max: 30,
+max: 20,
 vals: s => `Infra/Jobs: ${s.infraJobs}  ·  Cycle: ${s.cycle}`,
 breakdown: s => {
 const sc = s.scores;
-return `Infra/Jobs (${s.infraJobs}) → ${sc.infraJobs}/15 pts &nbsp;|&nbsp; ${s.cycle} cycle → ${sc.cycle}/15 pts`;
+return `Infra/Jobs (${s.infraJobs}) → ${sc.infraJobs}/10 pts &nbsp;|&nbsp; ${s.cycle} cycle → ${sc.cycle}/10 pts`;
+},
+},
+{
+key: 'growthQuality',
+label: 'Growth Quality',
+max: 10,
+vals: s => `Annual Growth: ${s.growth}%`,
+breakdown: s => {
+const sc = s.scores;
+return `Growth ${s.growth}% (sweet spot 15–25%) → ${sc.growthQual}/10 pts`;
 },
 },
 {
@@ -54,10 +64,10 @@ return `Cycle risk → ${sc.cycleRisk}/3 pts &nbsp;|&nbsp; Market tightness → 
 key: 'marketQuality',
 label: 'Market Quality',
 max: 15,
-vals: s => `DSR: ${s.dsr}  ·  Economy: ${s.infraJobs}`,
+vals: s => `City: ${s.city}  ·  Economy: ${s.infraJobs}`,
 breakdown: s => {
 const sc = s.scores;
-return `Market size (DSR ${s.dsr}) → ${sc.marketSize}/8 pts &nbsp;|&nbsp; Diversification → ${sc.diversification}/7 pts`;
+return `Population (${s.city}) → ${sc.population}/8 pts &nbsp;|&nbsp; Diversification → ${sc.diversification}/7 pts`;
 },
 },
 ];
