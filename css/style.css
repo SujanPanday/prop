@@ -27,6 +27,10 @@
 .psb-tot { font-family:var(--font-h); font-size:26px; font-weight:900; line-height:1; }
 .psb-slbl { font-size:10px; color:var(--muted); }
 .psb-bonus { font-size:10px; color:var(--grade-aplus); font-weight:700; }
-.psb-acts { display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px; padding:10px; flex:0 0 52px; }
+.psb-photo { flex:0 0 110px; overflow:hidden; background:var(--surface2); border-right:1px solid var(--border); position:relative; }
+.psb-photo img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+.psb-photo-ph { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-size:10px; color:var(--muted); text-align:center; padding:6px; }
+.psb-photo-ph span { font-size:22px; opacity:0.25; }
 .ps-grid-wrap { padding:0 1.5rem 3rem; }
+@media (max-width:860px) { .psb-photo { flex:0 0 70px; } }
 @media (max-width:860px) { .ps-block { flex-wrap:wrap; } .psb-info { flex:1 1 calc(100% - 50px); border-right:none; } .psb-cats,.psb-reject { flex:0 0 100%; border-right:none; border-top:1px solid var(--border); } .psb-suburb,.psb-score-col,.psb-acts { flex:1 1 auto; border-top:1px solid var(--border); border-right:none; } }

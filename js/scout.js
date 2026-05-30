@@ -5,9 +5,9 @@ let scoutNextId = 1;
 const DEFAULT_PROPERTIES = [
 {id:1,address:"8 Drummond Court, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:595000,land:477,beds:3,baths:2,age:25,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
 {id:2,address:"5 Carpenteria Close, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:599000,land:473,beds:3,baths:2,age:25,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
-{id:3,address:"25 Hicks Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:374000,land:809,beds:3,baths:2,age:38,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:false,presentation:false,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:3,address:"25 Hicks Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:374000,land:809,beds:3,baths:2,age:38,type:"house",garage:"double",photo:"https://www.homely.com.au/img-variant/l-MyDesktop-9694237-1.jpg?named-transform=webDefaultTransform&version=jkUifrsEvcwRPfYXeNLhX5pCaBv1uDJU",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:false,presentation:false,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
 {id:4,address:"33a Seldon Place, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:625000,land:470,beds:3,baths:2,age:20,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
-{id:5,address:"57 Hudson Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:599000,land:609,beds:3,baths:1,age:30,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:5,address:"57 Hudson Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:599000,land:609,beds:3,baths:1,age:30,type:"house",garage:"single",photo:"https://www.homely.com.au/img-variant/l-RayWhite-8535504-1.jpg?named-transform=webDefaultTransform&version=mGiHBqyoIV9VGYH.oxOhdkJ9.AsVckBt",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
 {id:6,address:"17 Woodlake Avenue, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:639000,land:393,beds:3,baths:1,age:20,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
 {id:7,address:"25 McBride Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:579000,land:602,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
 {id:8,address:"38 Kittyhawk Crescent, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:549000,land:762,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
@@ -271,12 +271,12 @@ const priceFmt  = '$' + (p.price/1000).toFixed(0) + 'k';
 const priceCls  = p.price <= 650000 ? 'mtg' : 'mtr';
 const garageTxt = p.garage==='double'?'2-car':p.garage==='single'?'1-car':'—';
 const yieldTxt  = r.suburbData ? r.suburbData.yield.toFixed(1)+'%' : '—';
-const rentTxt   = r.estRentPw  ? '$'+r.estRentPw+'/wk' : '—';
 const growthTxt = r.suburbData ? r.suburbGrowth+'%' : '—';
 const vacTxt    = r.suburbData ? r.suburbData.vac+'%' : '—';
 const cycleTxt  = r.suburbCycle || '—';
 const subScore  = r.suburbTotal ? r.suburbTotal+' '+r.suburbGrade : '—';
 const rejectLbl = rejected ? `<br><span style="font-size:10px;color:var(--grade-d)">${r.rejectReasons[0]||''}</span>` : '';
+const sc = (v,m) => rejected ? '—' : `<span style="font-weight:600;color:${(v/m)>=0.8?'#27b389':(v/m)>=0.6?'#3d8ef0':(v/m)>=0.4?'#e08c2a':'#e04a4a'}">${v}</span>`;
 return `<tr>
 <td style="font-weight:700;color:${scoreCol}">${rejected?'REJ':r.total}</td>
 <td><span style="font-family:var(--font-h);font-weight:800;font-size:12px;color:${gradeCol}">${grade.g}</span></td>
@@ -284,20 +284,23 @@ return `<tr>
 <td>${p.suburb}</td>
 <td><span class="st-badge st-${p.state||'QLD'}">${p.state||'—'}</span></td>
 <td class="${priceCls}">${priceFmt}</td>
-<td onclick="ptSort('land')" style="cursor:pointer">${p.land}m²</td>
-<td>${p.beds}bd·${p.baths}ba</td>
+<td>${p.land}m²</td>
+<td>${p.beds}</td>
+<td>${p.baths}</td>
 <td>${garageTxt}</td>
 <td>${p.age}yr</td>
+<td>${sc(r.A,20)}</td>
+<td>${sc(r.B,25)}</td>
+<td>${sc(r.C,20)}</td>
+<td>${sc(r.D,10)}</td>
+<td>${sc(r.E,10)}</td>
+<td>${sc(r.F,15)}</td>
+<td style="color:var(--grade-aplus)">${rejected?'—':(r.bonus>0?'+'+r.bonus:'—')}</td>
 <td style="font-size:11px;color:${scoreCol}">${subScore}</td>
 <td>${yieldTxt}</td>
-<td style="color:var(--muted2)">${rentTxt}</td>
 <td>${growthTxt}</td>
 <td>${vacTxt}</td>
 <td>${cycleTxt}</td>
-<td>
-<button class="sc-edit-btn" onclick="scoutOpenForm(${p.id})">Edit</button>
-<button class="sc-del-btn"  onclick="scoutDelete(${p.id})">✕</button>
-</td>
 </tr>`;
 }).join('');
 }
@@ -430,11 +433,15 @@ const subHtml = rejected ? '' : `
     <div class="psb-si">${r.suburbGrowth}% growth · ${r.suburbCycle}</div>`:'<div class="psb-si" style="color:#e04a4a">Not in database</div>'}
   </div>`;
 const bonusHtml = !rejected&&r.bonus>0 ? `<div class="psb-bonus">+${r.bonus} bonus</div>` : '';
+const photoHtml = p.photo
+  ? `<img src="${p.photo}" alt="" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+  : '';
 return `<div class="ps-block ${rejected?'sc-card-rejected':grade.cls}" style="animation-delay:${Math.min((rank-1)*0.04,0.5)}s">
   <div class="psb-l">
     <div class="psb-rank">#${rank}</div>
     <div class="psb-gbig" style="color:${gradeColor}">${grade.g}</div>
   </div>
+  <div class="psb-photo">${photoHtml}<div class="psb-photo-ph" style="display:${p.photo?'none':'flex'}"><span>🏠</span><div>${p.suburb||''}</div></div></div>
   <div class="psb-info">
     <div class="psb-addr">${p.address||'—'}</div>
     <div class="psb-meta">${p.suburb||'—'}${p.state?', '+p.state:''}</div>
@@ -452,10 +459,6 @@ return `<div class="ps-block ${rejected?'sc-card-rejected':grade.cls}" style="an
     <div class="psb-tot" style="color:${gradeColor}">${rejected?'REJ':r.total}</div>
     ${!rejected?'<div class="psb-slbl">/100</div>':''}
     ${bonusHtml}
-  </div>
-  <div class="psb-acts" onclick="event.stopPropagation()">
-    <button class="sc-edit-btn" onclick="scoutOpenForm(${p.id})">Edit</button>
-    <button class="sc-del-btn"  onclick="scoutDelete(${p.id})">✕</button>
   </div>
 </div>`;
 }

@@ -430,7 +430,6 @@
           <button class="ps-chip"           data-g="g-d"     onclick="psSetGrade('g-d',this)">D</button>
         </div>
       </div>
-      <button class="sc-add-btn" style="padding:8px 18px;font-size:13px" onclick="scoutOpenForm()">+ Add Property</button>
       <div class="res-count" id="ps-count"></div>
     </div>
 
@@ -445,8 +444,7 @@
     <!-- Empty state -->
     <div id="ps-empty" class="scout-empty" style="display:none">
       <div class="scout-empty-icon">🏠</div>
-      <p>No properties added yet.<br><span style="color:var(--muted)">Go to Property Table to add your first property.</span></p>
-      <button class="sc-add-btn" onclick="scoutOpenForm()">+ Add Property</button>
+      <p>No properties to display.</p>
     </div>
 
     <div id="ps-grid" class="ps-grid-wrap"></div>
@@ -458,7 +456,7 @@
 
   <div class="mt-header">
     <div class="mt-title">Property Data Table</div>
-    <div class="mt-sub" id="pt-count">0 properties · Score · Grade · Address · Suburb · Price · Land · Bed·Bath · Garage · Age · Sub.Score · Yield% · Rent/wk · Growth% · Vac% · Cycle</div>
+    <div class="mt-sub" id="pt-count">0 properties · Score · Grade · Address · Suburb · Price · Land · Beds · Baths · Garage · Age · A–F scores · Bonus · Sub.Score · Yield% · Growth% · Vac% · Cycle</div>
   </div>
 
   <div class="mt-controls">
@@ -484,7 +482,6 @@
       <option value="g-d">D Reject</option>
     </select>
     <button class="reset-btn" onclick="ptReset()">&#8635; Reset</button>
-    <button class="sc-add-btn" style="padding:7px 18px;font-size:13px" onclick="scoutOpenForm()">+ Add Property</button>
   </div>
 
   <!-- Empty state -->
@@ -504,16 +501,22 @@
           <th>St</th>
           <th onclick="ptSort('price')"  >Price</th>
           <th onclick="ptSort('land')"   >Land m²</th>
-          <th onclick="ptSort('beds')"   >Bed·Bath</th>
+          <th onclick="ptSort('beds')"   >Beds</th>
+          <th>Baths</th>
           <th>Garage</th>
           <th onclick="ptSort('age')"    >Age</th>
+          <th title="A: Suburb Quality (max 20)">A/20</th>
+          <th title="B: Land &amp; House (max 25)">B/25</th>
+          <th title="C: Street Quality (max 20)">C/20</th>
+          <th title="D: Schools (max 10)">D/10</th>
+          <th title="E: Amenities (max 10)">E/10</th>
+          <th title="F: Risk Control (max 15)">F/15</th>
+          <th title="Bonus points (max +10)">Bonus</th>
           <th>Sub.Score</th>
           <th onclick="ptSort('yield')"  >Yield%</th>
-          <th>Rent/wk</th>
           <th onclick="ptSort('growth')" >Growth%</th>
           <th onclick="ptSort('vac')"    >Vac%</th>
           <th>Cycle</th>
-          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="pt-tbody"></tbody>
