@@ -70,8 +70,8 @@ function scoreVacRisk(vac) {
 return vac < 0.5 ? 2 : vac < 1.0 ? 2 : vac < 2.0 ? 1 : 0;
 }
 const CITY_POP = {
-'Perth SE':8000,'Perth NE':8000,'Perth North':8000,'Perth South':8000,
-'Rockingham':150,'Kwinana':110,'Mandurah':95,'Murray':15,
+'Perth SE':2300,'Perth NE':2300,'Perth North':2300,'Perth South':2300,
+'Rockingham':150,'Kwinana':52,'Mandurah':95,'Murray':15,
 'Bunbury':75,'Collie':8,'Narrogin':6,'Northam':8,
 'Merredin':3,'Manjimup':5,'Mount Barker':4,'Geraldton':40,
 'Kalgoorlie':30,'Port Hedland':15,'Albany':35,'Karratha':28,
