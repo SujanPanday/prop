@@ -446,6 +446,19 @@ let mtSortDir = 1;
 const IJ_LABEL = { major: 'Major', strong: 'Strong', moderate: 'Moderate', weak: 'Weak', none: 'None' };
 const IJ_CLS   = { major: 'mtg', strong: 'mtg', moderate: 'mta', weak: 'mtr', none: 'mtr' };
 const CY_CLS   = { 'Early': 'mtg', 'Early-Mid': 'mtg', 'Mid': 'mta', 'Late': 'mtr', 'Peak': 'mtr' };
+function getSuburbPop(city) {
+if (typeof CITY_POP === 'undefined') return 15;
+return CITY_POP[city] || 15;
+}
+function popDisplay(pop) {
+if (pop >= 1000) return (pop / 1000).toFixed(1) + 'M';
+if (pop >= 100)  return pop + 'k+';
+return '~' + pop + 'k';
+}
+function getSuburbScore(r) {
+if (typeof scoreMasterSuburb === 'undefined') return null;
+return scoreMasterSuburb(r);
+}
 function mtRender() {
 const search  = document.getElementById('mt-search').value.toLowerCase();
 const state   = document.getElementById('mt-state').value;
@@ -455,30 +468,40 @@ const vf      = document.getElementById('mt-vacancy').value;
 const pf      = document.getElementById('mt-price').value;
 const ij      = document.getElementById('mt-ij').value;
 const cycle   = document.getElementById('mt-cycle').value;
+const popf    = document.getElementById('mt-pop') ? document.getElementById('mt-pop').value : '';
 let data = MASTER_SUBURBS.filter(r => {
 if (search && !r.suburb.toLowerCase().includes(search) && !r.city.toLowerCase().includes(search)) return false;
 if (state && r.state !== state) return false;
-if (yf === '6+'     && r.yield < 6)                          return false;
-if (yf === '5to6'   && (r.yield < 5   || r.yield >= 6))      return false;
-if (yf === '4.5to5' && (r.yield < 4.5 || r.yield >= 5))      return false;
-if (yf === 'sub4.5' && r.yield >= 4.5)                       return false;
-if (gf === '20+'    && r.growth < 20)                         return false;
-if (gf === '15to20' && (r.growth < 15  || r.growth >= 20))    return false;
-if (gf === '10to15' && (r.growth < 10  || r.growth >= 15))    return false;
-if (gf === 'sub10'  && r.growth >= 10)                        return false;
-if (vf === 'sub1'   && r.vac >= 1)                            return false;
-if (vf === '1to1.5' && (r.vac < 1   || r.vac >= 1.5))        return false;
-if (vf === '1.5to2' && (r.vac < 1.5 || r.vac >= 2))          return false;
-if (vf === '2plus'  && r.vac < 2)                             return false;
-if (pf === 'sub500'   && r.price >= 500000)                   return false;
-if (pf === '500to600' && (r.price < 500000 || r.price >= 600000)) return false;
-if (pf === '600to650' && (r.price < 600000 || r.price >= 650000)) return false;
-if (pf === '650plus'  && r.price < 650000)                    return false;
+if (yf === '6+'     && r.yield < 6)                               return false;
+if (yf === '5to6'   && (r.yield < 5   || r.yield >= 6))           return false;
+if (yf === '4.5to5' && (r.yield < 4.5 || r.yield >= 5))           return false;
+if (yf === 'sub4.5' && r.yield >= 4.5)                            return false;
+if (gf === '20+'    && r.growth < 20)                              return false;
+if (gf === '15to20' && (r.growth < 15  || r.growth >= 20))         return false;
+if (gf === '10to15' && (r.growth < 10  || r.growth >= 15))         return false;
+if (gf === 'sub10'  && r.growth >= 10)                             return false;
+if (vf === 'sub1'   && r.vac >= 1)                                 return false;
+if (vf === '1to1.5' && (r.vac < 1   || r.vac >= 1.5))             return false;
+if (vf === '1.5to2' && (r.vac < 1.5 || r.vac >= 2))               return false;
+if (vf === '2plus'  && r.vac < 2)                                  return false;
+if (pf === 'sub500'   && r.price >= 500000)                        return false;
+if (pf === '500to600' && (r.price < 500000 || r.price >= 600000))  return false;
+if (pf === '600to650' && (r.price < 600000 || r.price >= 650000))  return false;
+if (pf === '650plus'  && r.price < 650000)                         return false;
 if (ij    && r.infraJobs !== ij)    return false;
 if (cycle && r.cycle     !== cycle) return false;
+var pop = getSuburbPop(r.city);
+if (popf === '100plus' && pop < 100)  return false;
+if (popf === '30to100' && (pop < 30  || pop >= 100)) return false;
+if (popf === 'under30' && pop >= 30)  return false;
 return true;
 });
 data.sort((a, b) => {
+if (mtSortCol === 'pop')   return mtSortDir * (getSuburbPop(a.city) - getSuburbPop(b.city));
+if (mtSortCol === 'score') {
+var sa = getSuburbScore(a), sb = getSuburbScore(b);
+return mtSortDir * ((sa ? sa.total : 0) - (sb ? sb.total : 0));
+}
 const av = a[mtSortCol], bv = b[mtSortCol];
 if (typeof av === 'string') return mtSortDir * av.localeCompare(bv);
 return mtSortDir * (av - bv);
@@ -505,21 +528,30 @@ var dc  = r.dsr    >= 58  ? 'mtg' : r.dsr    >= 55  ? 'mta' : 'mtr';
 var ijc = IJ_CLS[r.infraJobs] || 'mta';
 var cc  = CY_CLS[r.cycle]    || 'mta';
 var pc  = r.price <= 650000  ? 'mtg' : 'mtr';
-var pf  = r.price >= 1000000
+var prf = r.price >= 1000000
 ? '$' + (r.price / 1000000).toFixed(2) + 'M'
 : '$' + (r.price / 1000).toFixed(0) + 'k';
+var pop    = getSuburbPop(r.city);
+var popc   = pop >= 30 ? 'mtg' : pop >= 10 ? 'mta' : 'mtr';
+var popStr = popDisplay(pop);
+var sc     = getSuburbScore(r);
+var scVal  = sc ? sc.total : '—';
+var scc    = sc ? (sc.total >= 75 ? 'mtg' : sc.total >= 60 ? 'mta' : sc.total >= 45 ? '' : 'mtr') : '';
+var grade  = sc && typeof getGrade !== 'undefined' ? getGrade(sc.total).grade : '';
 return '<tr>' +
 '<td class="mt-rank">'   + r.rank + '</td>' +
 '<td class="mt-suburb">' + r.suburb + '</td>' +
 '<td class="mt-city">'   + r.city + '</td>' +
 '<td><span class="st-badge st-' + r.state + '">' + r.state + '</span></td>' +
-'<td class="' + pc  + '">' + pf + '</td>' +
-'<td class="' + yc  + '">' + r.yield.toFixed(1) + '%</td>' +
-'<td class="' + gc  + '">' + r.growth + '%</td>' +
-'<td class="' + vc  + '">' + r.vac + '%</td>' +
-'<td class="' + dc  + '">' + r.dsr + '</td>' +
-'<td class="' + ijc + '">' + (IJ_LABEL[r.infraJobs] || r.infraJobs) + '</td>' +
-'<td class="' + cc  + '">' + r.cycle + '</td>' +
+'<td class="' + pc   + '">' + prf + '</td>' +
+'<td class="' + yc   + '">' + r.yield.toFixed(1) + '%</td>' +
+'<td class="' + gc   + '">' + r.growth + '%</td>' +
+'<td class="' + vc   + '">' + r.vac + '%</td>' +
+'<td class="' + dc   + '">' + r.dsr + '</td>' +
+'<td class="' + popc + '">' + popStr + '</td>' +
+'<td class="' + ijc  + '">' + (IJ_LABEL[r.infraJobs] || r.infraJobs) + '</td>' +
+'<td class="' + cc   + '">' + r.cycle + '</td>' +
+'<td class="' + scc  + '" style="font-weight:600">' + scVal + (grade ? ' <span style="opacity:.7;font-size:.85em">' + grade + '</span>' : '') + '</td>' +
 '<td class="mt-note">'   + r.note + '</td>' +
 '</tr>';
 }).join('');
@@ -542,6 +574,8 @@ document.getElementById('mt-vacancy').value = '';
 document.getElementById('mt-price').value   = '';
 document.getElementById('mt-ij').value      = '';
 document.getElementById('mt-cycle').value   = '';
+var popEl = document.getElementById('mt-pop');
+if (popEl) popEl.value = '';
 mtRender();
 }
 mtRender();

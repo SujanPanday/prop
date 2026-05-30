@@ -24,10 +24,17 @@ case 'Peak':      return  0;
 default:          return  6;
 }
 }
-function scoreGrowthQuality(growth) {
-if (growth >= 15 && growth <= 25) return 10;
-if (growth >= 10 && growth <  15) return  7;
-if (growth >  25 && growth <= 35) return  7;
+function scoreGrowthQuality(growth, cycle) {
+const early = cycle === 'Early' || cycle === 'Early-Mid';
+if (early) {
+if (growth >= 10) return 10;
+if (growth >=  7) return  8;
+if (growth >=  5) return  6;
+return 4;
+}
+if (growth >= 15 && growth <= 25) return  8;
+if (growth >= 10 && growth <  15) return  6;
+if (growth >  25 && growth <= 35) return  6;
 if (growth >=  7 && growth <  10) return  3;
 if (growth >  35)                 return  2;
 return 0;
@@ -144,7 +151,7 @@ sc.vacancy        = scoreVacancy(s.vac);
 sc.dsr            = scoreDSR(s.dsr);
 sc.infraJobs      = scoreInfraJobs(s.infraJobs);
 sc.cycle          = scoreCycle(s.cycle);
-sc.growthQual     = scoreGrowthQuality(s.growth);
+sc.growthQual     = scoreGrowthQuality(s.growth, s.cycle);
 sc.yield_         = scoreYield(s.yield);
 sc.yieldQual      = scoreYieldQuality(s.yield, s.vac);
 sc.ownerOcc       = scoreOwnerOcc(s.dsr, s.vac);

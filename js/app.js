@@ -27,7 +27,8 @@ max: 10,
 vals: s => `Annual Growth: ${s.growth}%`,
 breakdown: s => {
 const sc = s.scores;
-return `Growth ${s.growth}% (sweet spot 15–25%) → ${sc.growthQual}/10 pts`;
+const cycleNote = (s.cycle==='Early'||s.cycle==='Early-Mid') ? 'Early cycle bonus' : 'sweet spot 15–25%';
+return `Growth ${s.growth}% (${cycleNote}) → ${sc.growthQual}/10 pts`;
 },
 },
 {
