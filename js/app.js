@@ -76,18 +76,21 @@ const DATA = MASTER_SUBURBS.map(s => ({ ...s, scores: scoreMasterSuburb(s) }));
 let sortCol    = 'total';
 let sortDir    = -1;
 let gradeFilter = 'all';
-const PAGE_HASH = { suburbs: '#scores', table: '#table', scout: '#scout' };
-const HASH_PAGE = { '#scores': 'suburbs', '#table': 'table', '#scout': 'scout' };
-const TAB_INDEX = { suburbs: 0, table: 1, scout: 2 };
+const PAGE_HASH = { suburbs: '#suburb-score', table: '#suburb-table', pscore: '#property-score', ptable: '#property-table' };
+const HASH_PAGE = { '#suburb-score': 'suburbs', '#suburb-table': 'table', '#property-score': 'pscore', '#property-table': 'ptable' };
+const TAB_INDEX = { suburbs: 0, table: 1, pscore: 2, ptable: 3 };
 function activatePage(page) {
 document.getElementById('page-suburbs').style.display = page === 'suburbs' ? 'block' : 'none';
 document.getElementById('page-table').style.display   = page === 'table'   ? 'block' : 'none';
-document.getElementById('page-scout').style.display   = page === 'scout'   ? 'block' : 'none';
+document.getElementById('page-pscore').style.display  = page === 'pscore'  ? 'block' : 'none';
+document.getElementById('page-ptable').style.display  = page === 'ptable'  ? 'block' : 'none';
 document.querySelectorAll('.nav-tab').forEach((t, i) => {
 t.classList.toggle('active', i === TAB_INDEX[page]);
 });
 window.scrollTo(0, 0);
-if (page === 'table') mtRender();
+if (page === 'table')  mtRender();
+if (page === 'pscore') psRender();
+if (page === 'ptable') ptRender();
 }
 function showPage(page) {
 history.pushState({ page }, '', PAGE_HASH[page] || '#scores');
