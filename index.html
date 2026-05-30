@@ -315,12 +315,287 @@
 
 <!-- ── PROPERTY SCOUT PAGE ── -->
 <div id="page-scout" style="display:none">
-  <div class="coming-soon">
-    <div class="coming-soon-icon">🔍</div>
-    <span class="coming-badge">Coming Soon</span>
-    <h2>Property Scout</h2>
-    <p>Search and analyse individual properties within our top-rated suburbs. Get detailed reports on specific addresses, rental estimates, and investment projections.</p>
+
+  <div class="sc-page-hero">
+    <div class="sc-hero-text">
+      <div class="hero-tag" style="margin-bottom:.6rem">Property Scout v2.0</div>
+      <h2 style="font-family:var(--font-h);font-size:1.6rem;font-weight:800;margin-bottom:.4rem">Score Individual Properties</h2>
+      <p style="color:var(--muted2);font-size:13px">Hard-filter then score across 6 categories. Sorted best-to-worst automatically.</p>
+    </div>
+    <button class="sc-add-btn" onclick="scoutOpenForm()">+ Add Property</button>
   </div>
+
+  <!-- Empty state -->
+  <div id="scout-empty" class="scout-empty">
+    <div class="scout-empty-icon">🏠</div>
+    <p>No properties analysed yet.<br><span style="color:var(--muted)">Enter an address to get started.</span></p>
+    <button class="sc-add-btn" onclick="scoutOpenForm()">Add First Property</button>
+  </div>
+
+  <!-- Results -->
+  <div id="scout-results" style="padding:0 1.5rem 3rem"></div>
+
+  <!-- ── FORM MODAL ── -->
+  <div id="scout-modal" class="sc-modal-overlay" style="display:none" onclick="if(event.target===this)scoutCloseForm()">
+    <div class="sc-modal">
+      <div class="sc-modal-head">
+        <span>Property Analysis Form</span>
+        <button class="sc-modal-close" onclick="scoutCloseForm()">✕</button>
+      </div>
+      <input type="hidden" id="scout-form-edit-id">
+      <!-- Hidden radio value holders -->
+      <input type="hidden" id="scout-r-type"    value="house">
+      <input type="hidden" id="scout-r-garage"  value="double">
+      <input type="hidden" id="scout-r-bushfire" value="none">
+
+      <form id="scout-form" onsubmit="return false">
+      <div class="sc-modal-body">
+
+        <!-- SECTION 1: Property Info -->
+        <div class="sc-section">
+          <div class="sc-section-title">① Property Details</div>
+          <div class="sc-field-full">
+            <label>Full Address <span class="sc-req">*</span></label>
+            <input type="text" id="sf-address" placeholder="e.g. 12 Smith Street, Kirwan QLD 4817">
+          </div>
+          <div class="sc-field-row">
+            <div class="sc-field">
+              <label>Suburb Name (for scoring) <span class="sc-req">*</span></label>
+              <input type="text" id="sf-suburb" placeholder="e.g. Kirwan">
+            </div>
+            <div class="sc-field sc-field-sm">
+              <label>State</label>
+              <select id="sf-state">
+                <option value="">—</option>
+                <option>NSW</option><option>QLD</option><option>VIC</option>
+                <option>WA</option><option>SA</option><option>TAS</option><option>NT</option>
+              </select>
+            </div>
+          </div>
+          <div class="sc-field-row">
+            <div class="sc-field">
+              <label>Purchase Price ($) <span class="sc-req">*</span></label>
+              <input type="number" id="sf-price" placeholder="580000" min="0" max="1500000">
+            </div>
+            <div class="sc-field">
+              <label>Land Size (m²) <span class="sc-req">*</span></label>
+              <input type="number" id="sf-land" placeholder="600" min="0">
+            </div>
+          </div>
+          <div class="sc-field-row">
+            <div class="sc-field">
+              <label>Bedrooms</label>
+              <input type="number" id="sf-beds" value="4" min="1" max="8">
+            </div>
+            <div class="sc-field">
+              <label>Bathrooms</label>
+              <input type="number" id="sf-baths" value="2" min="1" max="6">
+            </div>
+            <div class="sc-field">
+              <label>Property Age (years)</label>
+              <input type="number" id="sf-age" value="15" min="0" max="120">
+            </div>
+          </div>
+          <div class="sc-field-full">
+            <label>Property Type</label>
+            <div class="sc-tog-group">
+              <button type="button" class="sc-toggle sc-tog-yes" data-radio="type" data-val="house" onclick="scoutRadio('type','house',this)">House</button>
+              <button type="button" class="sc-toggle" data-radio="type" data-val="unit" onclick="scoutRadio('type','unit',this)">Unit / Apt</button>
+              <button type="button" class="sc-toggle" data-radio="type" data-val="townhouse" onclick="scoutRadio('type','townhouse',this)">Townhouse</button>
+            </div>
+          </div>
+          <div class="sc-field-full">
+            <label>Garage</label>
+            <div class="sc-tog-group">
+              <button type="button" class="sc-toggle" data-radio="garage" data-val="none" onclick="scoutRadio('garage','none',this)">None</button>
+              <button type="button" class="sc-toggle" data-radio="garage" data-val="single" onclick="scoutRadio('garage','single',this)">Single</button>
+              <button type="button" class="sc-toggle sc-tog-yes" data-radio="garage" data-val="double" onclick="scoutRadio('garage','double',this)">Double ✓ (+3pts)</button>
+            </div>
+          </div>
+          <div class="sc-field-full">
+            <label>Photo URL (optional)</label>
+            <input type="url" id="sf-photo" placeholder="https://...">
+          </div>
+        </div>
+
+        <!-- SECTION 2: Hard Reject Filters -->
+        <div class="sc-section sc-section-danger">
+          <div class="sc-section-title">⚠ Hard Filters — Any YES = Instant Reject</div>
+          <div class="sc-tog-grid">
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Flood overlay?</div>
+              <button type="button" id="sf-flood" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Heritage overlay?</div>
+              <button type="button" id="sf-heritage" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Extreme bushfire? (use Risk section)</div>
+              <button type="button" id="sf-bushfire-hard" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Major structural issues?</div>
+              <button type="button" id="sf-structural" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">High crime pocket?</div>
+              <button type="button" id="sf-crime" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Main road frontage?</div>
+              <button type="button" id="sf-mainroad" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Adjacent industrial?</div>
+              <button type="button" id="sf-industrial" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Street Quality -->
+        <div class="sc-section">
+          <div class="sc-section-title">C  Street Quality (max 20 pts)</div>
+          <div class="sc-tog-grid">
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Cul-de-sac? (+5)</div>
+              <button type="button" id="sf-culdesac" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Quiet internal street? (+5)</div>
+              <button type="button" id="sf-quietstreet" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">No through traffic? (+3)</div>
+              <button type="button" id="sf-nothrough" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Owner occupier street? (+3)</div>
+              <button type="button" id="sf-oostreet" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Well-maintained homes? (+2)</div>
+              <button type="button" id="sf-maintained" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Good street presentation? (+2)</div>
+              <button type="button" id="sf-presentation" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item sc-tog-penalty">
+              <div class="sc-tog-label">Rail line backing? (−5)</div>
+              <button type="button" id="sf-railbacking" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item sc-tog-penalty">
+              <div class="sc-tog-label">Commercial backing? (−5)</div>
+              <button type="button" id="sf-combacking" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Schools & Amenities -->
+        <div class="sc-section">
+          <div class="sc-section-title">D + E  Schools & Amenities (max 20 pts)</div>
+          <div class="sc-tog-grid">
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Primary school &lt;1km? (+3)</div>
+              <button type="button" id="sf-pri1km" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Secondary school &lt;2km? (+3)</div>
+              <button type="button" id="sf-sec2km" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Multiple schools nearby? (+2)</div>
+              <button type="button" id="sf-multisch" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Good school reputation? (+2)</div>
+              <button type="button" id="sf-goodsch" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Shopping &lt;5 mins? (+3)</div>
+              <button type="button" id="sf-shops5" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Hospital &lt;10 mins? (+2)</div>
+              <button type="button" id="sf-hosp10" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Employment hub &lt;15 mins? (+3)</div>
+              <button type="button" id="sf-employ15" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Public transport nearby? (+2)</div>
+              <button type="button" id="sf-transport" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: Risk -->
+        <div class="sc-section">
+          <div class="sc-section-title">F  Risk Assessment (max 15 pts)</div>
+          <div class="sc-field-full" style="margin-bottom:1rem">
+            <label>Bushfire Risk Level</label>
+            <div class="sc-tog-group">
+              <button type="button" class="sc-toggle sc-tog-yes" data-radio="bushfire" data-val="none" onclick="scoutRadio('bushfire','none',this)">None (+4)</button>
+              <button type="button" class="sc-toggle" data-radio="bushfire" data-val="low" onclick="scoutRadio('bushfire','low',this)">Low (+2)</button>
+              <button type="button" class="sc-toggle" data-radio="bushfire" data-val="medium" onclick="scoutRadio('bushfire','medium',this)">Medium</button>
+              <button type="button" class="sc-toggle sc-tog-warn" data-radio="bushfire" data-val="extreme" onclick="scoutRadio('bushfire','extreme',this)">Extreme (REJECT)</button>
+            </div>
+          </div>
+          <div class="sc-tog-grid">
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Low insurance risk area? (+2)</div>
+              <button type="button" id="sf-lowinsurance" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 6: Bonus Features -->
+        <div class="sc-section">
+          <div class="sc-section-title">★  Bonus Features (max +10 pts)</div>
+          <div class="sc-tog-grid">
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Corner block (+2)</div>
+              <button type="button" id="sf-corner" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Subdivision potential (+5)</div>
+              <button type="button" id="sf-subdivision" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Duplex potential (+5)</div>
+              <button type="button" id="sf-duplex" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Granny flat potential (+3)</div>
+              <button type="button" id="sf-granny" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Walk to school (+2)</div>
+              <button type="button" id="sf-walkschool" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">Walk to shops (+2)</div>
+              <button type="button" id="sf-walkshops" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+            <div class="sc-tog-item">
+              <div class="sc-tog-label">NBN FTTP (+1)</div>
+              <button type="button" id="sf-nbn" class="sc-toggle" onclick="this.classList.toggle('sc-tog-yes')">NO</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      </form>
+
+      <div class="sc-modal-foot">
+        <button class="sc-btn-cancel" onclick="scoutCloseForm()">Cancel</button>
+        <button class="sc-btn-submit" onclick="scoutSubmitForm()">Analyse Property →</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -331,5 +606,6 @@
 <script src="js/scorer.js?v=7"></script>
 <script src="js/suburb-table.js?v=7"></script>
 <script src="js/app.js?v=7"></script>
+<script src="js/scout.js?v=1"></script>
 </body>
 </html>
