@@ -456,7 +456,7 @@
 
   <div class="mt-header">
     <div class="mt-title">Property Data Table</div>
-    <div class="mt-sub" id="pt-count">0 properties · Score · Grade · Address · Suburb · Price · Land · Beds · Baths · Garage · Age · A–F scores · Bonus · Sub.Score · Yield% · Growth% · Vac% · Cycle</div>
+    <div class="mt-sub" id="pt-count">0 properties · Score · Grade · Address · Suburb · State · Price · Land m² · House m² · Beds · Baths · Garage · Year Built · Flood Risk · Bushfire Risk · Heritage · Street Quality · Schools · Amenities · Risk · Bonus</div>
   </div>
 
   <div class="mt-controls">
@@ -494,29 +494,26 @@
     <table class="mt-table">
       <thead>
         <tr>
-          <th onclick="ptSort('score')" >Score</th>
+          <th onclick="ptSort('score')"  >Score</th>
           <th>Grade</th>
           <th onclick="ptSort('address')">Address</th>
           <th onclick="ptSort('suburb')" >Suburb</th>
-          <th>St</th>
+          <th>State</th>
           <th onclick="ptSort('price')"  >Price</th>
           <th onclick="ptSort('land')"   >Land m²</th>
+          <th onclick="ptSort('housem2')">House m²</th>
           <th onclick="ptSort('beds')"   >Beds</th>
           <th>Baths</th>
           <th>Garage</th>
-          <th onclick="ptSort('age')"    >Age</th>
-          <th title="A: Suburb Quality (max 20)">A/20</th>
-          <th title="B: Land &amp; House (max 25)">B/25</th>
-          <th title="C: Street Quality (max 20)">C/20</th>
-          <th title="D: Schools (max 10)">D/10</th>
-          <th title="E: Amenities (max 10)">E/10</th>
-          <th title="F: Risk Control (max 15)">F/15</th>
-          <th title="Bonus points (max +10)">Bonus</th>
-          <th>Sub.Score</th>
-          <th onclick="ptSort('yield')"  >Yield%</th>
-          <th onclick="ptSort('growth')" >Growth%</th>
-          <th onclick="ptSort('vac')"    >Vac%</th>
-          <th>Cycle</th>
+          <th onclick="ptSort('year')"   >Year Built</th>
+          <th>Flood Risk</th>
+          <th>Bushfire Risk</th>
+          <th>Heritage Overlay</th>
+          <th>Street Quality Notes</th>
+          <th>Schools &amp; Family Notes</th>
+          <th>Amenities &amp; Jobs Notes</th>
+          <th>Risk Control Notes</th>
+          <th>Bonus Notes</th>
         </tr>
       </thead>
       <tbody id="pt-tbody"></tbody>

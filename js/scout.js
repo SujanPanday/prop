@@ -3,20 +3,20 @@ const PT_KEY = 'aqiq_props_v1';
 let scoutProps  = [];
 let scoutNextId = 1;
 const DEFAULT_PROPERTIES = [
-{id:1,address:"8 Drummond Court, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:595000,land:477,beds:3,baths:2,age:25,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
-{id:2,address:"5 Carpenteria Close, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:599000,land:473,beds:3,baths:2,age:25,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
-{id:3,address:"25 Hicks Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:374000,land:809,beds:3,baths:2,age:38,type:"house",garage:"double",photo:"https://www.homely.com.au/img-variant/l-MyDesktop-9694237-1.jpg?named-transform=webDefaultTransform&version=jkUifrsEvcwRPfYXeNLhX5pCaBv1uDJU",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:false,presentation:false,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:4,address:"33a Seldon Place, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:625000,land:470,beds:3,baths:2,age:20,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
-{id:5,address:"57 Hudson Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:599000,land:609,beds:3,baths:1,age:30,type:"house",garage:"single",photo:"https://www.homely.com.au/img-variant/l-RayWhite-8535504-1.jpg?named-transform=webDefaultTransform&version=mGiHBqyoIV9VGYH.oxOhdkJ9.AsVckBt",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:6,address:"17 Woodlake Avenue, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:639000,land:393,beds:3,baths:1,age:20,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
-{id:7,address:"25 McBride Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:579000,land:602,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:8,address:"38 Kittyhawk Crescent, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:549000,land:762,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:9,address:"41 Campion Circle, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:549000,land:700,beds:3,baths:1,age:30,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:10,address:"135 Thuringowa Drive, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:550000,land:783,beds:3,baths:1,age:35,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:true,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:false,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:11,address:"37 Bokirana Crescent, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:629000,land:665,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:12,address:"4 Kabbarli Court, Karama NT 0812",suburb:"Karama",state:"NT",price:610000,land:989,beds:3,baths:1,age:40,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:true,granny:true,walkschool:true,walkshops:false,nbn:true},
-{id:13,address:"97C Great Northern Highway, Midland WA 6056",suburb:"Midland",state:"WA",price:635000,land:350,beds:3,baths:1,age:25,type:"house",garage:"single",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:true,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:false,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
-{id:14,address:"6 Edith Court, Leanyer NT 0812",suburb:"Leanyer",state:"NT",price:770000,land:819,beds:3,baths:2,age:30,type:"house",garage:"double",photo:"",flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true}
+{id:1,address:"8 Drummond Court, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:595000,land:477,beds:3,baths:2,age:25,type:"house",garage:"double",photo:"",housem2:155,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
+{id:2,address:"5 Carpenteria Close, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:599000,land:473,beds:3,baths:2,age:25,type:"house",garage:"single",photo:"",housem2:148,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
+{id:3,address:"25 Hicks Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:374000,land:809,beds:3,baths:2,age:38,type:"house",garage:"double",photo:"https://www.homely.com.au/img-variant/l-MyDesktop-9694237-1.jpg?named-transform=webDefaultTransform&version=jkUifrsEvcwRPfYXeNLhX5pCaBv1uDJU",housem2:125,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:false,presentation:false,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:4,address:"33a Seldon Place, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:625000,land:470,beds:3,baths:2,age:20,type:"house",garage:"single",photo:"",housem2:162,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
+{id:5,address:"57 Hudson Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:599000,land:609,beds:3,baths:1,age:30,type:"house",garage:"single",photo:"https://www.homely.com.au/img-variant/l-RayWhite-8535504-1.jpg?named-transform=webDefaultTransform&version=mGiHBqyoIV9VGYH.oxOhdkJ9.AsVckBt",housem2:138,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:6,address:"17 Woodlake Avenue, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:639000,land:393,beds:3,baths:1,age:20,type:"house",garage:"double",photo:"",housem2:155,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
+{id:7,address:"25 McBride Street, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:579000,land:602,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",housem2:135,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:8,address:"38 Kittyhawk Crescent, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:549000,land:762,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",housem2:140,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:9,address:"41 Campion Circle, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:549000,land:700,beds:3,baths:1,age:30,type:"house",garage:"single",photo:"",housem2:132,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:10,address:"135 Thuringowa Drive, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:550000,land:783,beds:3,baths:1,age:35,type:"house",garage:"single",photo:"",housem2:125,flood:false,heritage:false,structural:false,crime:false,mainroad:true,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:false,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:11,address:"37 Bokirana Crescent, Kirwan QLD 4817",suburb:"Kirwan",state:"QLD",price:629000,land:665,beds:3,baths:1,age:30,type:"house",garage:"double",photo:"",housem2:143,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:12,address:"4 Kabbarli Court, Karama NT 0812",suburb:"Karama",state:"NT",price:610000,land:989,beds:3,baths:1,age:40,type:"house",garage:"double",photo:"",housem2:118,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:true,duplex:true,granny:true,walkschool:true,walkshops:false,nbn:true},
+{id:13,address:"97C Great Northern Highway, Midland WA 6056",suburb:"Midland",state:"WA",price:635000,land:350,beds:3,baths:1,age:25,type:"house",garage:"single",photo:"",housem2:108,flood:false,heritage:false,structural:false,crime:false,mainroad:true,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:false,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:true,walkshops:false,nbn:true},
+{id:14,address:"6 Edith Court, Leanyer NT 0812",suburb:"Leanyer",state:"NT",price:770000,land:819,beds:3,baths:2,age:30,type:"house",garage:"double",photo:"",housem2:150,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true}
 ];
 function ptSave() {
 try { localStorage.setItem(PT_KEY, JSON.stringify(scoutProps)); } catch(e) {}
@@ -145,7 +145,7 @@ let psGradeFilter = 'all';
 let psSearch      = '';
 let psState       = '';
 let psSortCol     = 'total';
-let psSortDir     = -1;
+let psSortDir     = 1;
 function psRender() {
 const grid  = document.getElementById('ps-grid');
 const empty = document.getElementById('ps-empty');
@@ -208,13 +208,13 @@ psRender();
 }
 function psSetSort(col, el) {
 if (psSortCol === col) psSortDir *= -1;
-else { psSortCol = col; psSortDir = col==='price'?1:-1; }
+else { psSortCol = col; psSortDir = 1; }
 document.querySelectorAll('.ps-sbtn').forEach(b => b.classList.remove('on'));
 el.classList.add('on');
 psRender();
 }
 let ptSortCol = 'score';
-let ptSortDir = -1;
+let ptSortDir = 1;
 let ptSearch  = '';
 let ptState   = '';
 let ptPrice   = '';
@@ -246,16 +246,16 @@ if (gc !== ptGrade) return false;
 return true;
 });
 data.sort((a, b) => {
+if (a.r.rejected && !b.r.rejected) return 1;
+if (!a.r.rejected && b.r.rejected) return -1;
 if (ptSortCol === 'score')   return ptSortDir * (b.r.total - a.r.total);
 if (ptSortCol === 'price')   return ptSortDir * (a.p.price - b.p.price);
 if (ptSortCol === 'suburb')  return ptSortDir * a.p.suburb.localeCompare(b.p.suburb);
 if (ptSortCol === 'address') return ptSortDir * a.p.address.localeCompare(b.p.address);
 if (ptSortCol === 'beds')    return ptSortDir * (a.p.beds - b.p.beds);
 if (ptSortCol === 'land')    return ptSortDir * (a.p.land - b.p.land);
-if (ptSortCol === 'age')     return ptSortDir * (a.p.age - b.p.age);
-if (ptSortCol === 'yield')   return ptSortDir * ((a.r.suburbData?.yield||0) - (b.r.suburbData?.yield||0));
-if (ptSortCol === 'growth')  return ptSortDir * ((a.r.suburbGrowth||0) - (b.r.suburbGrowth||0));
-if (ptSortCol === 'vac')     return ptSortDir * ((a.r.suburbData?.vac||0) - (b.r.suburbData?.vac||0));
+if (ptSortCol === 'housem2') return ptSortDir * ((b.p.housem2||0) - (a.p.housem2||0));
+if (ptSortCol === 'year')    return ptSortDir * (a.p.age - b.p.age);
 return 0;
 });
 if (cnt) cnt.textContent = data.length + ' / ' + scoutProps.length + ' properties';
@@ -269,14 +269,35 @@ const scoreCol  = rejected ? 'var(--grade-d)' :
 r.total>=80?'#27b389' : r.total>=70?'#3d8ef0' : r.total>=60?'#e08c2a':'#e04a4a';
 const priceFmt  = '$' + (p.price/1000).toFixed(0) + 'k';
 const priceCls  = p.price <= 650000 ? 'mtg' : 'mtr';
-const garageTxt = p.garage==='double'?'2-car':p.garage==='single'?'1-car':'—';
-const yieldTxt  = r.suburbData ? r.suburbData.yield.toFixed(1)+'%' : '—';
-const growthTxt = r.suburbData ? r.suburbGrowth+'%' : '—';
-const vacTxt    = r.suburbData ? r.suburbData.vac+'%' : '—';
-const cycleTxt  = r.suburbCycle || '—';
-const subScore  = r.suburbTotal ? r.suburbTotal+' '+r.suburbGrade : '—';
-const rejectLbl = rejected ? `<br><span style="font-size:10px;color:var(--grade-d)">${r.rejectReasons[0]||''}</span>` : '';
-const sc = (v,m) => rejected ? '—' : `<span style="font-weight:600;color:${(v/m)>=0.8?'#27b389':(v/m)>=0.6?'#3d8ef0':(v/m)>=0.4?'#e08c2a':'#e04a4a'}">${v}</span>`;
+const garageTxt  = p.garage==='double'?'2-car':p.garage==='single'?'1-car':'—';
+const houseSqm   = p.housem2 ? p.housem2+'m²' : '—';
+const yearBuilt  = p.age ? (2026 - p.age) : '—';
+const floodRisk  = p.flood ? '⚠ Yes' : 'None';
+const bushRisk   = p.bushfire==='extreme'?'⚠ Extreme':p.bushfire==='medium'?'Medium':p.bushfire==='low'?'Low':'None';
+const heritageOv = p.heritage ? '⚠ Yes' : 'None';
+const rejectLbl  = rejected ? `<br><span style="font-size:10px;color:var(--grade-d)">${r.rejectReasons[0]||''}</span>` : '';
+const streetNotes = [
+  p.culdesac&&'Cul-de-sac', p.quietstreet&&'Quiet street', p.nothrough&&'No through traffic',
+  p.oostreet&&'Owner-occ', p.maintained&&'Well-maintained', p.presentation&&'Good presentation',
+  p.railbacking&&'⚠ Rail backing', p.combacking&&'⚠ Commercial backing'
+].filter(Boolean).join(' · ')||'—';
+const schoolNotes = [
+  p.pri1km&&'Primary <1km', p.sec2km&&'Secondary <2km',
+  p.multisch&&'Multiple schools', p.goodsch&&'Good reputation'
+].filter(Boolean).join(' · ')||'—';
+const amenityNotes = [
+  p.shops5&&'Shopping <5min', p.hosp10&&'Hospital <10min',
+  p.employ15&&'Employment <15min', p.transport&&'Public transport'
+].filter(Boolean).join(' · ')||'—';
+const riskNotes = [
+  (!p.flood)&&'No flood', p.bushfire==='none'&&'No bushfire', p.bushfire==='low'&&'Low bushfire',
+  (!p.heritage)&&'No heritage', p.lowinsurance&&'Low insurance', (!p.crime)&&'Low crime'
+].filter(Boolean).join(' · ')||'—';
+const bonusNotes = [
+  p.corner&&'Corner +2', p.subdivision&&'Subdivision +5', p.duplex&&'Duplex +5',
+  p.granny&&'Granny flat +3', p.walkschool&&'Walk to school +2',
+  p.walkshops&&'Walk to shops +2', p.nbn&&'NBN FTTP +1'
+].filter(Boolean).join(' · ')||'—';
 return `<tr>
 <td style="font-weight:700;color:${scoreCol}">${rejected?'REJ':r.total}</td>
 <td><span style="font-family:var(--font-h);font-weight:800;font-size:12px;color:${gradeCol}">${grade.g}</span></td>
@@ -285,27 +306,24 @@ return `<tr>
 <td><span class="st-badge st-${p.state||'QLD'}">${p.state||'—'}</span></td>
 <td class="${priceCls}">${priceFmt}</td>
 <td>${p.land}m²</td>
+<td>${houseSqm}</td>
 <td>${p.beds}</td>
 <td>${p.baths}</td>
 <td>${garageTxt}</td>
-<td>${p.age}yr</td>
-<td>${sc(r.A,20)}</td>
-<td>${sc(r.B,25)}</td>
-<td>${sc(r.C,20)}</td>
-<td>${sc(r.D,10)}</td>
-<td>${sc(r.E,10)}</td>
-<td>${sc(r.F,15)}</td>
-<td style="color:var(--grade-aplus)">${rejected?'—':(r.bonus>0?'+'+r.bonus:'—')}</td>
-<td style="font-size:11px;color:${scoreCol}">${subScore}</td>
-<td>${yieldTxt}</td>
-<td>${growthTxt}</td>
-<td>${vacTxt}</td>
-<td>${cycleTxt}</td>
+<td>${yearBuilt}</td>
+<td style="color:${p.flood?'var(--grade-d)':'var(--grade-a)'}">${floodRisk}</td>
+<td style="color:${p.bushfire&&p.bushfire!=='none'?'var(--grade-d)':'var(--grade-a)'}">${bushRisk}</td>
+<td style="color:${p.heritage?'var(--grade-d)':'var(--grade-a)'}">${heritageOv}</td>
+<td class="mt-note">${streetNotes}</td>
+<td class="mt-note">${schoolNotes}</td>
+<td class="mt-note">${amenityNotes}</td>
+<td class="mt-note">${riskNotes}</td>
+<td class="mt-note">${bonusNotes}</td>
 </tr>`;
 }).join('');
 }
 function ptSort(col) {
-ptSortDir = (ptSortCol === col) ? ptSortDir * -1 : -1;
+ptSortDir = (ptSortCol === col) ? ptSortDir * -1 : 1;
 ptSortCol = col;
 ptRender();
 }
