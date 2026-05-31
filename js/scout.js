@@ -28,7 +28,15 @@ try {
 const s = localStorage.getItem(PT_KEY);
 if (s) {
 scoutProps  = JSON.parse(s);
+const existingAddresses = new Set(scoutProps.map(p => p.address.toLowerCase().trim()));
+const toMerge = DEFAULT_PROPERTIES.filter(p => !existingAddresses.has(p.address.toLowerCase().trim()));
+if (toMerge.length) {
 scoutNextId = scoutProps.reduce((m,p) => Math.max(m, p.id+1), 1);
+toMerge.forEach(p => { scoutProps.push({...p, id: scoutNextId++}); });
+ptSave();
+} else {
+scoutNextId = scoutProps.reduce((m,p) => Math.max(m, p.id+1), 1);
+}
 } else {
 scoutProps  = DEFAULT_PROPERTIES.map(p => ({...p}));
 scoutNextId = DEFAULT_PROPERTIES.length + 1;
