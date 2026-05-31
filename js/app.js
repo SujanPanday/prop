@@ -246,6 +246,7 @@ return `<div class="card ${g.cls}" style="animation-delay:${delay}s" onclick="th
 <span class="verdict-label">${g.label}</span>
 <span class="total-pts"><span>${sc.total}</span>/100 pts</span>
 </div>
+${sc.rejectReasons && sc.rejectReasons.length ? `<div class="reject-reasons">${sc.rejectReasons.map(r=>`<span class="rej-chip">✕ ${r}</span>`).join('')}</div>` : ''}
 <div class="card-note">${s.note}</div>
 <div class="tap-hint">tap for notes</div>
 </div>`;

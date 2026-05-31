@@ -168,6 +168,17 @@ sc.riskControl    = sc.cycleRisk + sc.vacRisk;
 sc.marketQuality  = sc.population + sc.diversification;
 sc.total = sc.demandSupply + sc.growthDrivers + sc.growthQuality +
 sc.cashFlow + sc.ownerOccTotal + sc.riskControl + sc.marketQuality;
+// Strict reject conditions — any one forces grade D
+const pop = CITY_POP[s.city] || 15;
+sc.rejectReasons = [];
+if (s.vac > 2.5)              sc.rejectReasons.push('Vacancy > 2.5%');
+if (s.price > 650000)         sc.rejectReasons.push('Median price > $650k');
+if (pop < 25)                 sc.rejectReasons.push('Population < 25k');
+if (s.yield < 3.5)            sc.rejectReasons.push('Yield < 3.5%');
+if (s.dsr < 50)               sc.rejectReasons.push('DSR < 50');
+if (s.cycle === 'Peak')       sc.rejectReasons.push('Market cycle: Peak');
+if (s.infraJobs === 'weak')   sc.rejectReasons.push('Economic diversification: Weak');
+if (sc.rejectReasons.length)  sc.total = 0;
 return sc;
 }
 function getGrade(total) {
