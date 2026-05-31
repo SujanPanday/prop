@@ -402,7 +402,7 @@ const suburbInfo = r.suburbData
 ? `<div class="sc-suburb-name">${r.suburbData.suburb}, ${r.suburbData.state}</div>
 <div class="sc-suburb-score">${r.suburbTotal}/100 · ${r.suburbGrade} ${r.suburbLabel}</div>
 <div class="sc-suburb-meta">Growth ${r.suburbGrowth}% · ${r.suburbCycle} cycle · Vac ${r.suburbData.vac}%</div>`
-: `<div class="sc-suburb-name">${p.suburb||'—'}</div><div class="sc-suburb-score" style="color:var(--muted)">Suburb not in database</div>`;
+: `<div class="sc-suburb-name">${p.suburb||'—'}</div><div class="sc-suburb-score" style="color:var(--muted)">No suburb data — default C grade (50/100) applied</div>`;
 const rentalLine = r.suburbData ? `Est. $${r.estRentPw}/wk · ${r.suburbData.yield.toFixed(1)}% suburb yield` : '—';
 const growthLine = r.suburbData ? `${r.suburbGrowth}% annual · ${r.suburbCycle} cycle` : '—';
 const photoHtml  = p.photo
@@ -498,7 +498,7 @@ const subHtml  = `
     <div class="psb-sn">${r.suburbData?r.suburbData.suburb:p.suburb||'—'}</div>
     <div class="psb-ss" style="color:${subColor}">${r.suburbTotal||'—'}/100 · ${r.suburbGrade||'—'}</div>
     ${r.suburbData?`<div class="psb-si">${r.suburbData.yield.toFixed(1)}% yield · $${r.estRentPw}/wk</div>
-    <div class="psb-si">${r.suburbGrowth}% growth · ${r.suburbCycle}</div>`:'<div class="psb-si" style="color:#e04a4a">Not in database</div>'}
+    <div class="psb-si">${r.suburbGrowth}% growth · ${r.suburbCycle}</div>`:'<div class="psb-si" style="color:var(--muted)">No suburb data — default C grade applied</div>'}
   </div>`;
 const bonusHtml = r.bonus>0 ? `<div class="psb-bonus">+${r.bonus} bonus</div>` : '';
 const photoHtml = p.photo
