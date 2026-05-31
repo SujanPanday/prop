@@ -558,6 +558,7 @@ return '<tr>' +
 '<td class="' + cc      + '">' + r.cycle + '</td>' +
 '<td class="' + crimeCls + '">' + crimeLabel + '</td>' +
 '<td class="' + domCls  + '">' + domLabel + '</td>' +
+'<td style="color:var(--muted)">' + (r.econD || '—') + '</td>' +
 '<td class="' + scc     + '" style="font-weight:600">' + scVal + (grade ? ' <span style="opacity:.7;font-size:.85em">' + grade + '</span>' : '') + '</td>' +
 '<td class="mt-note">'   + r.note + '</td>' +
 '</tr>';
