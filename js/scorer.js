@@ -56,18 +56,20 @@ if (dsr >= 55 && vac < 1.5) return  5;
 if (dsr >= 52 && vac < 2.0) return  2;
 return 0;
 }
-function scoreCycleRisk(cycle) {
-switch (cycle) {
-case 'Early':     return 3;
-case 'Early-Mid': return 2;
-case 'Mid':       return 2;
-case 'Late':      return 1;
-case 'Peak':      return 0;
-default:          return 2;
+function scoreCrime(crime) {
+switch (crime) {
+case 'very_low': return 3;
+case 'low':      return 2;
+case 'average':  return 1;
+case 'high':     return 0;
+default:         return 0;
 }
 }
-function scoreVacRisk(vac) {
-return vac < 0.5 ? 2 : vac < 1.0 ? 2 : vac < 2.0 ? 1 : 0;
+function scoreDOM(dom) {
+if (dom === null || dom === undefined || dom === '') return 0;
+if (dom < 30)  return 2;
+if (dom <= 45) return 1;
+return 0;
 }
 const CITY_POP = {
 'Perth SE':95,'Perth NE':175,'Perth North':240,'Perth South':85,
@@ -155,8 +157,8 @@ sc.growthQual     = scoreGrowthQuality(s.growth, s.cycle);
 sc.yield_         = scoreYield(s.yield);
 sc.yieldQual      = scoreYieldQuality(s.yield, s.vac);
 sc.ownerOcc       = scoreOwnerOcc(s.dsr, s.vac);
-sc.cycleRisk      = scoreCycleRisk(s.cycle);
-sc.vacRisk        = scoreVacRisk(s.vac);
+sc.crime          = scoreCrime(s.crime);
+sc.dom            = scoreDOM(s.dom);
 sc.population     = scorePopulation(s.city);
 sc.diversification = scoreDiversification(s.infraJobs);
 sc.demandSupply   = sc.vacancy + sc.dsr;
@@ -164,7 +166,7 @@ sc.growthDrivers  = sc.infraJobs + sc.cycle;
 sc.growthQuality  = sc.growthQual;
 sc.cashFlow       = sc.yield_ + sc.yieldQual;
 sc.ownerOccTotal  = sc.ownerOcc;
-sc.riskControl    = sc.cycleRisk + sc.vacRisk;
+sc.riskControl    = sc.crime + sc.dom;
 sc.marketQuality  = sc.population + sc.diversification;
 sc.total = sc.demandSupply + sc.growthDrivers + sc.growthQuality +
 sc.cashFlow + sc.ownerOccTotal + sc.riskControl + sc.marketQuality;

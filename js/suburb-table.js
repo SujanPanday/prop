@@ -536,20 +536,29 @@ var sc     = getSuburbScore(r);
 var scVal  = sc ? sc.total : '—';
 var scc    = sc ? (sc.total >= 75 ? 'mtg' : sc.total >= 60 ? 'mta' : sc.total >= 45 ? '' : 'mtr') : '';
 var grade  = sc && typeof getGrade !== 'undefined' ? getGrade(sc.total).grade : '';
+var CRIME_LABEL = { very_low: 'Very Low', low: 'Low', average: 'Average', high: 'High' };
+var CRIME_CLS   = { very_low: 'mtg', low: 'mtg', average: 'mta', high: 'mtr' };
+var crimeLabel  = r.crime ? (CRIME_LABEL[r.crime] || r.crime) : '—';
+var crimeCls    = r.crime ? (CRIME_CLS[r.crime]   || '')      : 'muted';
+var domVal      = (r.dom != null && r.dom !== '') ? r.dom : null;
+var domLabel    = domVal !== null ? domVal + 'd' : '—';
+var domCls      = domVal !== null ? (domVal < 30 ? 'mtg' : domVal <= 45 ? 'mta' : 'mtr') : '';
 return '<tr>' +
 '<td class="mt-rank">'   + r.rank + '</td>' +
 '<td class="mt-suburb">' + r.suburb + '</td>' +
 '<td class="mt-city">'   + r.city + '</td>' +
 '<td><span class="st-badge st-' + r.state + '">' + r.state + '</span></td>' +
-'<td class="' + pc   + '">' + prf + '</td>' +
-'<td class="' + yc   + '">' + r.yield.toFixed(1) + '%</td>' +
-'<td class="' + gc   + '">' + r.growth + '%</td>' +
-'<td class="' + vc   + '">' + r.vac + '%</td>' +
-'<td class="' + dc   + '">' + r.dsr + '</td>' +
-'<td class="' + popc + '">' + popStr + '</td>' +
-'<td class="' + ijc  + '">' + (IJ_LABEL[r.infraJobs] || r.infraJobs) + '</td>' +
-'<td class="' + cc   + '">' + r.cycle + '</td>' +
-'<td class="' + scc  + '" style="font-weight:600">' + scVal + (grade ? ' <span style="opacity:.7;font-size:.85em">' + grade + '</span>' : '') + '</td>' +
+'<td class="' + pc      + '">' + prf + '</td>' +
+'<td class="' + yc      + '">' + r.yield.toFixed(1) + '%</td>' +
+'<td class="' + gc      + '">' + r.growth + '%</td>' +
+'<td class="' + vc      + '">' + r.vac + '%</td>' +
+'<td class="' + dc      + '">' + r.dsr + '</td>' +
+'<td class="' + popc    + '">' + popStr + '</td>' +
+'<td class="' + ijc     + '">' + (IJ_LABEL[r.infraJobs] || r.infraJobs) + '</td>' +
+'<td class="' + cc      + '">' + r.cycle + '</td>' +
+'<td class="' + crimeCls + '">' + crimeLabel + '</td>' +
+'<td class="' + domCls  + '">' + domLabel + '</td>' +
+'<td class="' + scc     + '" style="font-weight:600">' + scVal + (grade ? ' <span style="opacity:.7;font-size:.85em">' + grade + '</span>' : '') + '</td>' +
 '<td class="mt-note">'   + r.note + '</td>' +
 '</tr>';
 }).join('');

@@ -55,10 +55,12 @@ return `DSR ${s.dsr} + Vac ${s.vac}% → ${sc.ownerOcc}/10 pts`;
 key: 'riskControl',
 label: 'Risk Control',
 max: 5,
-vals: s => `Cycle: ${s.cycle}  ·  Vacancy: ${s.vac}%`,
+vals: s => `Crime: ${s.crime ? s.crime.replace('_',' ') : '—'}  ·  DOM: ${s.dom != null && s.dom !== '' ? s.dom + 'd' : '—'}`,
 breakdown: s => {
 const sc = s.scores;
-return `Cycle risk → ${sc.cycleRisk}/3 pts &nbsp;|&nbsp; Market tightness → ${sc.vacRisk}/2 pts`;
+const crimeLabel = s.crime ? s.crime.replace('_',' ') : 'no data';
+const domLabel   = s.dom != null && s.dom !== '' ? s.dom + ' days' : 'no data';
+return `Crime (${crimeLabel}) → ${sc.crime}/3 pts &nbsp;|&nbsp; DOM ${domLabel} → ${sc.dom}/2 pts`;
 },
 },
 {

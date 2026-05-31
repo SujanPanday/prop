@@ -136,15 +136,15 @@
           <div class="legend-cat">
             <div class="legend-cat-title" style="color:var(--muted2)">⑥ Risk Control — 5 pts</div>
             <div class="legend-row">
-              <div class="legend-item-name">Cycle Risk (3 pts)</div>
+              <div class="legend-item-name">Crime Rate (3 pts)</div>
               <div class="legend-thresholds">
-                <span>Early = 3 ★</span><span>Early-Mid = 2</span><span>Mid = 2</span><span>Late = 1</span><span>Peak = 0</span>
+                <span>Very Low = 3</span><span>Low = 2</span><span>Average = 1</span><span>High = 0</span>
               </div>
             </div>
             <div class="legend-row">
-              <div class="legend-item-name">Market Tightness (2 pts)</div>
+              <div class="legend-item-name">Days on Market (2 pts)</div>
               <div class="legend-thresholds">
-                <span>vac&lt;1% = 2</span><span>vac&lt;2% = 1</span><span>else = 0</span>
+                <span>&lt;30 days = 2</span><span>30–45 days = 1</span><span>&gt;45 days = 0</span>
               </div>
             </div>
           </div>
@@ -167,6 +167,18 @@
 
         </div>
         <div class="legend-note">★ = heavily weighted toward your criteria (early cycle · 30k+ population). Hover any score bar for exact breakdown. DSR = Demand-to-Supply Ratio (HtAG/Picki, 0–100). Population: ABS 2026 estimates. All data 2026.</div>
+        <div style="margin-top:1rem;padding:0.75rem 1rem;background:rgba(224,74,74,0.06);border:1px solid rgba(224,74,74,0.2);border-radius:8px;">
+          <div style="font-size:11px;font-weight:700;color:#e04a4a;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem">⚠ Instant Disqualification — any one condition forces Grade D</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span style="font-size:11px;background:rgba(224,74,74,0.1);border:1px solid rgba(224,74,74,0.25);color:#e04a4a;padding:2px 9px;border-radius:4px;">Vacancy &gt; 2.5%</span>
+            <span style="font-size:11px;background:rgba(224,74,74,0.1);border:1px solid rgba(224,74,74,0.25);color:#e04a4a;padding:2px 9px;border-radius:4px;">Median price &gt; $650k</span>
+            <span style="font-size:11px;background:rgba(224,74,74,0.1);border:1px solid rgba(224,74,74,0.25);color:#e04a4a;padding:2px 9px;border-radius:4px;">Population &lt; 25k</span>
+            <span style="font-size:11px;background:rgba(224,74,74,0.1);border:1px solid rgba(224,74,74,0.25);color:#e04a4a;padding:2px 9px;border-radius:4px;">Yield &lt; 3.5%</span>
+            <span style="font-size:11px;background:rgba(224,74,74,0.1);border:1px solid rgba(224,74,74,0.25);color:#e04a4a;padding:2px 9px;border-radius:4px;">DSR &lt; 50</span>
+            <span style="font-size:11px;background:rgba(224,74,74,0.1);border:1px solid rgba(224,74,74,0.25);color:#e04a4a;padding:2px 9px;border-radius:4px;">Market cycle: Peak</span>
+            <span style="font-size:11px;background:rgba(224,74,74,0.1);border:1px solid rgba(224,74,74,0.25);color:#e04a4a;padding:2px 9px;border-radius:4px;">Diversification: Weak</span>
+          </div>
+        </div>
       </div>
     </details>
 
@@ -299,6 +311,8 @@
           <th onclick="mtSort('pop')"     >Population<span id="mta-pop" class="mt-th"></span></th>
           <th onclick="mtSort('infraJobs')">Infra / Jobs<span id="mta-infraJobs" class="mt-th"></span></th>
           <th onclick="mtSort('cycle')"   >Cycle<span id="mta-cycle" class="mt-th"></span></th>
+          <th onclick="mtSort('crime')"   >Crime<span id="mta-crime" class="mt-th"></span></th>
+          <th onclick="mtSort('dom')"     >DOM<span id="mta-dom" class="mt-th"></span></th>
           <th onclick="mtSort('score')"   >Score<span id="mta-score" class="mt-th"></span></th>
           <th>2026 Data Note</th>
         </tr>
