@@ -128,6 +128,8 @@ const CITY_POP = {
 'Port Augusta':13,'Coober Pedy':2,'Adelaide North':350,
 'Hobart':240,'Launceston':110,'Devonport':30,'George Town':7,
 'Darwin':150,'Alice Springs':25,'Katherine':10,'Tennant Creek':3,
+'Cowra':12,'Forbes':10,'Narromine':4,'Parkes':15,'West Wyalong':4,
+'Whyalla':22,'Clare Valley':8,
 };
 function scorePopulation(city) {
 const pop = CITY_POP[city] || 15;
@@ -160,7 +162,7 @@ sc.ownerOcc       = scoreOwnerOcc(s.dsr, s.vac);
 sc.crime          = scoreCrime(s.crime);
 sc.dom            = scoreDOM(s.dom);
 sc.population     = scorePopulation(s.city);
-sc.diversification = scoreDiversification(s.infraJobs);
+sc.diversification = scoreDiversification(s.econD || s.infraJobs);
 sc.demandSupply   = sc.vacancy + sc.dsr;
 sc.growthDrivers  = sc.infraJobs + sc.cycle;
 sc.growthQuality  = sc.growthQual;
@@ -179,7 +181,7 @@ if (pop < 25)                 sc.rejectReasons.push('Population < 25k');
 if (s.yield < 3.5)            sc.rejectReasons.push('Yield < 3.5%');
 if (s.dsr < 50)               sc.rejectReasons.push('DSR < 50');
 if (s.cycle === 'Peak')       sc.rejectReasons.push('Market cycle: Peak');
-if (s.infraJobs === 'weak')   sc.rejectReasons.push('Economic diversification: Weak');
+if ((s.econD || s.infraJobs) === 'weak') sc.rejectReasons.push('Economic diversification: Weak');
 if (sc.rejectReasons.length)  sc.total = 0;
 return sc;
 }
