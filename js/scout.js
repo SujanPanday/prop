@@ -55,7 +55,6 @@ estRentPw:0,suburbGrowth:0,suburbCycle:''
 if (p.price > 650000)         r.rejectReasons.push('Price over $650,000');
 if (p.type !== 'house')       r.rejectReasons.push('Not a standalone house');
 if (p.beds < 3)               r.rejectReasons.push('Less than 3 bedrooms');
-if (p.baths < 2)              r.rejectReasons.push('Less than 2 bathrooms');
 if (p.land < 400)             r.rejectReasons.push('Land under 400 m²');
 if (p.flood)                  r.rejectReasons.push('Flood overlay');
 if (p.heritage)               r.rejectReasons.push('Heritage overlay');
@@ -84,7 +83,7 @@ if (sg.grade === 'D') { r.rejected = true; r.rejectReasons.push('Suburb grade D'
 r.A = sg.grade==='A+'?20 : sg.grade==='A'?18 : sg.grade==='B'?14 : 8;
 const landPts = p.land>=700?10 : p.land>=500?8 : 5;
 const bedPts  = p.beds>=4?5:3;
-const bathPts = p.baths>=3?5:4;
+const bathPts = p.baths>=3?5 : p.baths>=2?4:2;
 const garPts  = p.garage==='double'?3:0;
 const agePts  = p.age<15?5 : p.age<25?3:1;
 r.B = Math.min(25, landPts+bedPts+bathPts+garPts+agePts);
