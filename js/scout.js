@@ -269,13 +269,24 @@ const scoreCol  = rejected ? 'var(--grade-d)' :
 r.total>=80?'#27b389' : r.total>=70?'#3d8ef0' : r.total>=60?'#e08c2a':'#e04a4a';
 const priceFmt  = '$' + (p.price/1000).toFixed(0) + 'k';
 const priceCls  = p.price <= 650000 ? 'mtg' : 'mtr';
-const garageTxt  = p.garage==='double'?'2-car':p.garage==='single'?'1-car':'—';
-const houseSqm   = p.housem2 ? p.housem2+'m²' : '—';
-const yearBuilt  = p.age ? (2026 - p.age) : '—';
+const garageTxt = p.garage==='double'?'2-car':p.garage==='single'?'1-car':'—';
+const yearBuilt = p.age ? (2026 - p.age) : '—';
+const priceFmt2 = '$' + (p.price/1000).toFixed(0) + 'k';
+const priceCls2 = p.price <= 650000 ? 'mtg' : 'mtr';
+
+if (rejected) {
+  const reasons = r.rejectReasons.join(' · ');
+  return `<tr style="opacity:0.7">
+<td style="font-weight:700;color:var(--grade-d)">REJ</td>
+<td><span style="font-family:var(--font-h);font-weight:800;font-size:12px;color:var(--grade-d)">REJ</span></td>
+<td class="mt-suburb" style="color:var(--grade-d)">${p.address}<br><span style="font-size:10px">${reasons}</span></td>
+<td colspan="16" style="color:var(--muted);font-size:11px;font-style:italic">Property rejected — no further analysis required</td>
+</tr>`;
+}
+
 const floodRisk  = p.flood ? '⚠ Yes — flood overlay present' : 'No';
 const bushRisk   = p.bushfire==='extreme'?'⚠ Yes — extreme risk':p.bushfire==='medium'?'Yes — medium risk':p.bushfire==='low'?'Yes — low risk':'No';
 const heritageOv = p.heritage ? '⚠ Yes — heritage overlay present' : 'No';
-const rejectLbl  = rejected ? `<br><span style="font-size:10px;color:var(--grade-d)">${r.rejectReasons[0]||''}</span>` : '';
 const streetNotes = [
   p.culdesac    && 'Cul-de-sac / dead-end street',
   p.quietstreet && 'Quiet internal street',
@@ -285,28 +296,28 @@ const streetNotes = [
   p.presentation&& 'Good street presentation',
   p.railbacking && '⚠ Rail line backing property',
   p.combacking  && '⚠ Commercial property backing',
-].filter(Boolean).join(' · ') || 'No street quality data recorded';
+].filter(Boolean).join('<br>') || 'No street quality data recorded';
 const schoolNotes = [
   p.pri1km   && 'Primary school within 1km',
   p.sec2km   && 'Secondary school within 2km',
   p.multisch && 'Multiple schools nearby',
   p.goodsch  && 'Strong school reputation',
-].filter(Boolean).join(' · ') || 'No school proximity data recorded';
+].filter(Boolean).join('<br>') || 'No school proximity data recorded';
 const amenityNotes = [
   p.shops5    && 'Shopping centre within 5 min drive',
   p.hosp10    && 'Hospital within 10 min drive',
   p.employ15  && 'Employment hub within 15 min drive',
   p.transport && 'Public transport accessible',
-].filter(Boolean).join(' · ') || 'No amenity data recorded';
+].filter(Boolean).join('<br>') || 'No amenity data recorded';
 const riskNotes = [
-  (!p.flood)               && 'No flood overlay',
-  p.bushfire==='none'      && 'No bushfire risk',
-  p.bushfire==='low'       && 'Low bushfire risk',
-  p.bushfire==='medium'    && '⚠ Medium bushfire risk',
-  (!p.heritage)            && 'No heritage overlay',
-  p.lowinsurance           && 'Low insurance risk area',
-  (!p.crime)               && 'Low crime area',
-].filter(Boolean).join(' · ') || 'No risk data recorded';
+  (!p.flood)            && 'No flood overlay',
+  p.bushfire==='none'   && 'No bushfire risk',
+  p.bushfire==='low'    && 'Low bushfire risk',
+  p.bushfire==='medium' && '⚠ Medium bushfire risk',
+  (!p.heritage)         && 'No heritage overlay',
+  p.lowinsurance        && 'Low insurance risk area',
+  (!p.crime)            && 'Low crime area',
+].filter(Boolean).join('<br>') || 'No risk data recorded';
 const bonusNotes = [
   p.corner      && 'Corner block',
   p.subdivision && 'Subdivision potential',
@@ -315,16 +326,15 @@ const bonusNotes = [
   p.walkschool  && 'Walkable to school',
   p.walkshops   && 'Walkable to shops',
   p.nbn         && 'NBN FTTP connected',
-].filter(Boolean).join(' · ') || '—';
+].filter(Boolean).join('<br>') || '—';
 return `<tr>
-<td style="font-weight:700;color:${scoreCol}">${rejected?'REJ':r.total}</td>
+<td style="font-weight:700;color:${scoreCol}">${r.total}</td>
 <td><span style="font-family:var(--font-h);font-weight:800;font-size:12px;color:${gradeCol}">${grade.g}</span></td>
-<td class="mt-suburb">${p.address}${rejectLbl}</td>
+<td class="mt-suburb">${p.address}</td>
 <td>${p.suburb}</td>
 <td><span class="st-badge st-${p.state||'QLD'}">${p.state||'—'}</span></td>
-<td class="${priceCls}">${priceFmt}</td>
+<td class="${priceCls2}">${priceFmt2}</td>
 <td>${p.land}m²</td>
-<td>${houseSqm}</td>
 <td>${p.beds}</td>
 <td>${p.baths}</td>
 <td>${garageTxt}</td>
