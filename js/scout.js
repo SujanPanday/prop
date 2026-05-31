@@ -272,32 +272,50 @@ const priceCls  = p.price <= 650000 ? 'mtg' : 'mtr';
 const garageTxt  = p.garage==='double'?'2-car':p.garage==='single'?'1-car':'—';
 const houseSqm   = p.housem2 ? p.housem2+'m²' : '—';
 const yearBuilt  = p.age ? (2026 - p.age) : '—';
-const floodRisk  = p.flood ? '⚠ Yes' : 'None';
-const bushRisk   = p.bushfire==='extreme'?'⚠ Extreme':p.bushfire==='medium'?'Medium':p.bushfire==='low'?'Low':'None';
-const heritageOv = p.heritage ? '⚠ Yes' : 'None';
+const floodRisk  = p.flood ? '⚠ Yes — flood overlay present' : 'No';
+const bushRisk   = p.bushfire==='extreme'?'⚠ Yes — extreme risk':p.bushfire==='medium'?'Yes — medium risk':p.bushfire==='low'?'Yes — low risk':'No';
+const heritageOv = p.heritage ? '⚠ Yes — heritage overlay present' : 'No';
 const rejectLbl  = rejected ? `<br><span style="font-size:10px;color:var(--grade-d)">${r.rejectReasons[0]||''}</span>` : '';
 const streetNotes = [
-  p.culdesac&&'Cul-de-sac', p.quietstreet&&'Quiet street', p.nothrough&&'No through traffic',
-  p.oostreet&&'Owner-occ', p.maintained&&'Well-maintained', p.presentation&&'Good presentation',
-  p.railbacking&&'⚠ Rail backing', p.combacking&&'⚠ Commercial backing'
-].filter(Boolean).join(' · ')||'—';
+  p.culdesac    && 'Cul-de-sac / dead-end street',
+  p.quietstreet && 'Quiet internal street',
+  p.nothrough   && 'No through traffic',
+  p.oostreet    && 'Owner-occupier dominated street',
+  p.maintained  && 'Well-maintained neighbouring homes',
+  p.presentation&& 'Good street presentation',
+  p.railbacking && '⚠ Rail line backing property',
+  p.combacking  && '⚠ Commercial property backing',
+].filter(Boolean).join(' · ') || 'No street quality data recorded';
 const schoolNotes = [
-  p.pri1km&&'Primary <1km', p.sec2km&&'Secondary <2km',
-  p.multisch&&'Multiple schools', p.goodsch&&'Good reputation'
-].filter(Boolean).join(' · ')||'—';
+  p.pri1km   && 'Primary school within 1km',
+  p.sec2km   && 'Secondary school within 2km',
+  p.multisch && 'Multiple schools nearby',
+  p.goodsch  && 'Strong school reputation',
+].filter(Boolean).join(' · ') || 'No school proximity data recorded';
 const amenityNotes = [
-  p.shops5&&'Shopping <5min', p.hosp10&&'Hospital <10min',
-  p.employ15&&'Employment <15min', p.transport&&'Public transport'
-].filter(Boolean).join(' · ')||'—';
+  p.shops5    && 'Shopping centre within 5 min drive',
+  p.hosp10    && 'Hospital within 10 min drive',
+  p.employ15  && 'Employment hub within 15 min drive',
+  p.transport && 'Public transport accessible',
+].filter(Boolean).join(' · ') || 'No amenity data recorded';
 const riskNotes = [
-  (!p.flood)&&'No flood', p.bushfire==='none'&&'No bushfire', p.bushfire==='low'&&'Low bushfire',
-  (!p.heritage)&&'No heritage', p.lowinsurance&&'Low insurance', (!p.crime)&&'Low crime'
-].filter(Boolean).join(' · ')||'—';
+  (!p.flood)               && 'No flood overlay',
+  p.bushfire==='none'      && 'No bushfire risk',
+  p.bushfire==='low'       && 'Low bushfire risk',
+  p.bushfire==='medium'    && '⚠ Medium bushfire risk',
+  (!p.heritage)            && 'No heritage overlay',
+  p.lowinsurance           && 'Low insurance risk area',
+  (!p.crime)               && 'Low crime area',
+].filter(Boolean).join(' · ') || 'No risk data recorded';
 const bonusNotes = [
-  p.corner&&'Corner +2', p.subdivision&&'Subdivision +5', p.duplex&&'Duplex +5',
-  p.granny&&'Granny flat +3', p.walkschool&&'Walk to school +2',
-  p.walkshops&&'Walk to shops +2', p.nbn&&'NBN FTTP +1'
-].filter(Boolean).join(' · ')||'—';
+  p.corner      && 'Corner block',
+  p.subdivision && 'Subdivision potential',
+  p.duplex      && 'Duplex development potential',
+  p.granny      && 'Granny flat potential',
+  p.walkschool  && 'Walkable to school',
+  p.walkshops   && 'Walkable to shops',
+  p.nbn         && 'NBN FTTP connected',
+].filter(Boolean).join(' · ') || '—';
 return `<tr>
 <td style="font-weight:700;color:${scoreCol}">${rejected?'REJ':r.total}</td>
 <td><span style="font-family:var(--font-h);font-weight:800;font-size:12px;color:${gradeCol}">${grade.g}</span></td>
