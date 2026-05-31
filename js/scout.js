@@ -447,14 +447,27 @@ ${suburbInfo}
 </div>`;
 }
 function buildScoutBlock(p, r, rank, total) {
-const rejected   = r.rejected;
-const grade      = rejected ? {g:'D',label:'Reject',cls:'sc-d'} : scoutGrade(r.total);
-const priceFmt   = '$' + (p.price/1000).toFixed(0) + 'k';
+const rejected = r.rejected;
+const priceFmt = '$' + (p.price/1000).toFixed(0) + 'k';
+if (rejected) {
+  return `<div class="ps-block sc-card-rejected" style="animation-delay:${Math.min((rank-1)*0.04,0.5)}s">
+  <div class="psb-l">
+    <div class="psb-rank">#${rank}</div>
+    <div class="psb-gbig" style="color:var(--grade-d)">REJ</div>
+  </div>
+  <div class="psb-info" style="flex:1;border-right:none">
+    <div class="psb-addr">${p.address||'—'}</div>
+    <div class="psb-meta">${p.suburb||'—'}${p.state?', '+p.state:''} · ${priceFmt}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">
+      ${r.rejectReasons.map(x=>`<span class="psb-ritem">✕ ${x}</span>`).join('')}
+    </div>
+  </div>
+</div>`;
+}
+const grade      = scoutGrade(r.total);
 const gradeColor = grade.g==='A+'?'var(--grade-aplus)':grade.g==='A'?'var(--grade-a)':
                    grade.g==='B'?'var(--grade-b)':grade.g==='C'?'var(--grade-c)':'var(--grade-d)';
-const catHtml = rejected
-  ? `<div class="psb-reject">${r.rejectReasons.map(x=>`<span class="psb-ritem">✕ ${x}</span>`).join('')}</div>`
-  : `<div class="psb-cats">${[
+const catHtml = `<div class="psb-cats">${[
       {l:'A  Suburb', p:r.A, m:20},
       {l:'B  Land',   p:r.B, m:25},
       {l:'C  Street', p:r.C, m:20},
@@ -471,18 +484,18 @@ const catHtml = rejected
       </div>`;
     }).join('')}</div>`;
 const subColor = r.suburbTotal>=75?'var(--grade-a)':r.suburbTotal>=60?'var(--grade-b)':'var(--muted2)';
-const subHtml = rejected ? '' : `
+const subHtml  = `
   <div class="psb-suburb">
     <div class="psb-sn">${r.suburbData?r.suburbData.suburb:p.suburb||'—'}</div>
     <div class="psb-ss" style="color:${subColor}">${r.suburbTotal||'—'}/100 · ${r.suburbGrade||'—'}</div>
     ${r.suburbData?`<div class="psb-si">${r.suburbData.yield.toFixed(1)}% yield · $${r.estRentPw}/wk</div>
     <div class="psb-si">${r.suburbGrowth}% growth · ${r.suburbCycle}</div>`:'<div class="psb-si" style="color:#e04a4a">Not in database</div>'}
   </div>`;
-const bonusHtml = !rejected&&r.bonus>0 ? `<div class="psb-bonus">+${r.bonus} bonus</div>` : '';
+const bonusHtml = r.bonus>0 ? `<div class="psb-bonus">+${r.bonus} bonus</div>` : '';
 const photoHtml = p.photo
   ? `<img src="${p.photo}" alt="" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
   : '';
-return `<div class="ps-block ${rejected?'sc-card-rejected':grade.cls}" style="animation-delay:${Math.min((rank-1)*0.04,0.5)}s">
+return `<div class="ps-block ${grade.cls}" style="animation-delay:${Math.min((rank-1)*0.04,0.5)}s">
   <div class="psb-l">
     <div class="psb-rank">#${rank}</div>
     <div class="psb-gbig" style="color:${gradeColor}">${grade.g}</div>
@@ -502,8 +515,8 @@ return `<div class="ps-block ${rejected?'sc-card-rejected':grade.cls}" style="an
   ${catHtml}
   ${subHtml}
   <div class="psb-score-col">
-    <div class="psb-tot" style="color:${gradeColor}">${rejected?'REJ':r.total}</div>
-    ${!rejected?'<div class="psb-slbl">/100</div>':''}
+    <div class="psb-tot" style="color:${gradeColor}">${r.total}</div>
+    <div class="psb-slbl">/100</div>
     ${bonusHtml}
   </div>
 </div>`;
