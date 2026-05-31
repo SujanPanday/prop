@@ -207,7 +207,35 @@ def update_table(data):
     return True
 
 
+def show_preview(data):
+    print('\n' + '─' * 55)
+    print('  PARSED DATA PREVIEW')
+    print('─' * 55)
+    rows = [
+        ('Suburb',     data['suburb']),
+        ('State',      data['state']),
+        ('City',       data['city']),
+        ('Price',      f"${data['price']:,}" if data['price'] else '—'),
+        ('Yield',      f"{data['yield']}%" if data['yield'] else '—'),
+        ('Growth',     f"{data['growth']}%" if data['growth'] else '—'),
+        ('Vacancy',    f"{data['vac']}%" if data['vac'] else '—'),
+        ('DSR',        str(data['dsr']) if data['dsr'] else '—'),
+        ('Cycle',      data['cycle']),
+        ('InfraJobs',  data['infraJobs']),
+        ('Econ D',     data['econD']),
+        ('Crime',      data['crime']),
+        ('DOM',        f"{data['dom']} days" if data['dom'] else '—'),
+        ('Pop (town)', f"{data['pop_k']}k" if data['pop_k'] else '—'),
+        ('Note',       data['note'][:60] + '…' if len(data.get('note', '')) > 60 else data.get('note', '')),
+    ]
+    for label, value in rows:
+        print(f'  {label:<12}  {value}')
+    print('─' * 55)
+
+
 def main():
+    yes_flag = '--yes' in sys.argv or '-y' in sys.argv
+
     print(QUERY_TEMPLATE)
     print('\nPaste the ChatGPT response below.')
     print('When done, press Enter twice then Ctrl+D (Mac) or Ctrl+Z+Enter (Windows):\n')
@@ -231,32 +259,16 @@ def main():
         print('\n  ERROR: Could not parse suburb name. Check the response format.')
         sys.exit(1)
 
-    # Show preview
-    print('\n' + '─' * 55)
-    print('  PARSED DATA PREVIEW')
-    print('─' * 55)
-    rows = [
-        ('Suburb',    data['suburb']),
-        ('State',     data['state']),
-        ('City',      data['city']),
-        ('Price',     f"${data['price']:,}" if data['price'] else '—'),
-        ('Yield',     f"{data['yield']}%" if data['yield'] else '—'),
-        ('Growth',    f"{data['growth']}%" if data['growth'] else '—'),
-        ('Vacancy',   f"{data['vac']}%" if data['vac'] else '—'),
-        ('DSR',       str(data['dsr']) if data['dsr'] else '—'),
-        ('Cycle',     data['cycle']),
-        ('InfraJobs', data['infraJobs']),
-        ('Econ D',    data['econD']),
-        ('Crime',     data['crime']),
-        ('DOM',       f"{data['dom']} days" if data['dom'] else '—'),
-        ('Pop (town)',f"{data['pop_k']}k" if data['pop_k'] else '—'),
-        ('Note',      data['note'][:60] + '…' if len(data.get('note',''))>60 else data.get('note','')),
-    ]
-    for label, value in rows:
-        print(f'  {label:<12}  {value}')
-    print('─' * 55)
+    show_preview(data)
 
-    confirm = input('\n  Update suburb-table.js with this data? (y/n): ').strip().lower()
+    if yes_flag:
+        confirm = 'y'
+    else:
+        try:
+            confirm = input('\n  Update suburb-table.js with this data? (y/n): ').strip().lower()
+        except EOFError:
+            confirm = 'n'
+
     if confirm != 'y':
         print('  Skipped — no changes made.')
         sys.exit(0)
