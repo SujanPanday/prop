@@ -18,7 +18,7 @@ const DEFAULT_PROPERTIES = [
 {id:13,address:"97C Great Northern Highway, Midland WA 6056",suburb:"Midland",state:"WA",price:635000,land:350,beds:3,baths:1,age:25,type:"house",garage:"single",photo:"",housem2:108,flood:false,heritage:false,structural:false,crime:false,mainroad:true,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:false,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:false,walkschool:false,walkshops:false,nbn:true},
 {id:14,address:"6 Edith Court, Leanyer NT 0812",suburb:"Leanyer",state:"NT",price:770000,land:819,beds:3,baths:2,age:35,type:"house",garage:"double",photo:"",housem2:150,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:true,quietstreet:true,nothrough:true,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:false},
 {id:15,address:"36 Boondar Street, Chigwell TAS 7011",suburb:"Chigwell",state:"TAS",price:635000,land:633,beds:3,baths:1,age:18,type:"house",garage:"double",photo:"",housem2:101,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:false,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:false,shops5:true,hosp10:false,employ15:true,transport:true,lowinsurance:false,corner:false,subdivision:false,duplex:false,granny:false,walkschool:false,walkshops:false,nbn:true},
-{id:16,address:"48 Watkinson Street, Devonport TAS 7310",suburb:"Devonport",state:"TAS",price:645000,land:655,beds:3,baths:1,age:58,type:"house",garage:"single",photo:"",housem2:119,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true}
+{id:16,address:"48 Watkinson Street, Devonport TAS 7310",suburb:"Devonport",state:"TAS",price:645000,land:655,beds:3,baths:1,age:58,type:"house",garage:"single",photo:"",housem2:119,flood:false,heritage:false,structural:false,crime:false,mainroad:false,industrial:false,bushfire:"none",poorStreet:false,culdesac:false,quietstreet:true,nothrough:false,oostreet:true,maintained:true,presentation:true,railbacking:false,combacking:false,pri1km:true,sec2km:true,multisch:true,goodsch:true,shops5:true,hosp10:true,employ15:true,transport:true,lowinsurance:true,corner:false,subdivision:false,duplex:false,granny:true,walkschool:true,walkshops:false,nbn:true,suburbScore:50}
 ];
 function ptSave() {
 try { localStorage.setItem(PT_KEY, JSON.stringify(scoutProps)); } catch(e) {}
@@ -75,9 +75,9 @@ if (p.mainroad)               r.rejectReasons.push('Main road frontage');
 if (p.industrial)             r.rejectReasons.push('Adjacent industrial use');
 if (p.poorStreet)             r.rejectReasons.push('Poor street reputation');
 if (r.rejectReasons.length)   { r.rejected = true; return r; }
-const sd = scoutFindSuburb(p.suburb, p.state);
+const sd = p.suburbScore !== undefined ? null : scoutFindSuburb(p.suburb, p.state);
 r.suburbData = sd;
-let subTotal = 50;
+let subTotal = p.suburbScore !== undefined ? p.suburbScore : 50;
 if (sd) {
 const sc = scoreMasterSuburb(sd);
 subTotal = sc.total;
