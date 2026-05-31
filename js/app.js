@@ -70,7 +70,7 @@ max: 15,
 vals: s => `City: ${s.city}  ·  Economy: ${s.infraJobs}`,
 breakdown: s => {
 const sc = s.scores;
-return `Population (${s.city}) → ${sc.population}/8 pts &nbsp;|&nbsp; Diversification → ${sc.diversification}/7 pts`;
+return `Popn in Town (${s.city}) → ${sc.population}/8 pts &nbsp;|&nbsp; Diversification → ${sc.diversification}/7 pts`;
 },
 },
 ];
